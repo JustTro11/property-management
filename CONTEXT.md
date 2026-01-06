@@ -14,6 +14,7 @@
 | **Database** | Supabase (PostgreSQL) |
 | **Auth** | Supabase Auth |
 | **i18n** | next-intl 4.7.0 |
+| **Testing** | Jest, React Testing Library, Playwright |
 | **Email** | Resend + React Email |
 | **Icons** | Lucide React |
 | **Forms** | React Hook Form |
@@ -34,6 +35,9 @@ property-manager/
 │   │   └── send-email/     # Tour request email API
 │   └── globals.css
 ├── components/
+│   ├── __tests__/          # Unit tests (colocated)
+│   │   ├── LocaleSwitcher.test.tsx
+│   │   └── PropertyCard.test.tsx
 │   ├── AdminPropertyForm.tsx   # CRUD form for properties
 │   ├── AuthForm.tsx            # Login/signup form
 │   ├── BookTourModal.tsx       # Tour scheduling modal
@@ -46,6 +50,8 @@ property-manager/
 │   ├── PropertyGallery.tsx     # Image gallery viewer
 │   └── emails/
 │       └── TourRequestEmail.tsx # Email template
+├── e2e/                    # End-to-End tests
+│   └── navigation.spec.ts
 ├── lib/
 │   ├── navigation.ts       # next-intl navigation helpers
 │   ├── supabaseClient.ts   # Browser Supabase client
@@ -56,15 +62,14 @@ property-manager/
 │   └── zh.json             # Chinese
 ├── sql/                    # Database migrations
 │   ├── schema.sql          # Properties table + RLS policies
-│   ├── migration_uuid.sql  # UUID migration
-│   ├── migration_images.sql # Images array column
 │   ├── seed_data.sql       # Initial properties
 │   └── seed_more_properties.sql
 ├── types/
 │   └── index.ts            # TypeScript interfaces
 ├── i18n/
 │   └── request.ts          # next-intl config
-└── middleware.ts           # Locale detection & routing
+├── jest.config.ts          # Unit test config
+└── playwright.config.ts    # E2E test config
 ```
 
 ## Data Model
@@ -134,6 +139,11 @@ interface Property {
 
 > **Important**: When adding/modifying styles, always use `dark:` variants to support both modes per project rules.
 
+### Testing
+- **Unit Testing**: Jest + React Testing Library (in `components/__tests__`)
+- **E2E Testing**: Playwright (in `e2e/`)
+- **CI Ready**: Tests configured for headless execution
+
 ## Environment Variables
 
 ```env
@@ -160,12 +170,16 @@ npm run start
 
 # Run linting
 npm run lint
+
+# Run Unit Tests
+npm run test
+
+# Run E2E Tests
+npm run test:e2e
 ```
 
 ## Database Setup
 
 Run SQL files in order against your Supabase project:
-1. `sql/schema.sql` - Create properties table with RLS
-2. `sql/migration_uuid.sql` - UUID extension
-3. `sql/migration_images.sql` - Images array column
-4. `sql/seed_data.sql` - Initial property data
+1. `sql/schema.sql` - Create properties table, extensions, and RLS policies
+2. `sql/seed_data.sql` - Initial property data

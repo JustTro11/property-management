@@ -37,6 +37,7 @@ LuxeLiving is a premium property rental management application built with **Next
 - **Styling**: Tailwind CSS 4
 - **Database**: Supabase (PostgreSQL)
 - **i18n**: next-intl 4.7
+- **Testing**: Jest, React Testing Library, Playwright
 - **Icons**: Lucide React
 - **Email**: Resend + React Email
 
@@ -64,7 +65,7 @@ LuxeLiving is a premium property rental management application built with **Next
 
 4. **Database Migration**
    Run the SQL scripts in `sql/` against your Supabase project in this order:
-   1. `schema.sql` (Tables, RLS, Extensions)
+   1. `schema.sql` (Tables, RLS, Extensions, Images)
    2. `seed_data.sql` (Initial Data - 20+ properties)
 
 5. **Run Development Server**
@@ -74,6 +75,18 @@ LuxeLiving is a premium property rental management application built with **Next
    # cmd /c npm run dev
    ```
    Open [http://localhost:3000](http://localhost:3000) to view the app.
+
+## 🧪 Testing
+
+This project uses **Jest** for unit testing and **Playwright** for end-to-end testing.
+
+```bash
+# Run Unit Tests (Components)
+npm run test
+
+# Run E2E Tests (Navigation & Flows)
+npm run test:e2e
+```
 
 ## 📁 Project Structure
 
@@ -85,9 +98,11 @@ LuxeLiving is a premium property rental management application built with **Next
 │   │   └── ...
 │   └── globals.css         # Tailwind 4 & CSS Variables
 ├── components/
+│   ├── __tests__/          # Unit tests (colocated)
 │   ├── ThemeToggle.tsx     # Dark mode toggle
 │   ├── LocaleSwitcher.tsx  # Language selector
 │   └── ...
+├── e2e/                    # End-to-End tests (Playwright)
 ├── messages/               # Translation files (en, es, zh, zh-TW)
 ├── lib/                    # Supabase & Navigation utilities
 └── sql/                    # Database migrations

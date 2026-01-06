@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabaseServer'
 import { Link, redirect } from '@/lib/navigation'
 import { Plus, Pencil, Trash2, Home } from 'lucide-react'
-import Image from 'next/image'
+import PropertyThumbnail from '@/components/PropertyThumbnail'
 
 export default async function AdminDashboard({
     params
@@ -47,17 +47,10 @@ export default async function AdminDashboard({
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center min-w-0 gap-4">
                                                 <div className="h-16 w-16 relative flex-shrink-0 rounded-lg overflow-hidden bg-zinc-800 border border-zinc-700">
-                                                    {property.image_url ? (
-                                                        <img
-                                                            src={property.image_url}
-                                                            alt={property.title}
-                                                            className="h-full w-full object-cover"
-                                                        />
-                                                    ) : (
-                                                        <div className="h-full w-full flex items-center justify-center">
-                                                            <Home className="text-zinc-600 w-6 h-6" />
-                                                        </div>
-                                                    )}
+                                                    <PropertyThumbnail
+                                                        src={property.image_url}
+                                                        alt={property.title}
+                                                    />
                                                 </div>
                                                 <div className="min-w-0 flex-1">
                                                     <p className="text-sm font-medium text-indigo-400 truncate">{property.title}</p>

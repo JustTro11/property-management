@@ -46,10 +46,10 @@ export default function AuthForm() {
     }
 
     return (
-        <div className="w-full max-w-md space-y-8 bg-zinc-900/50 backdrop-blur-xl p-10 rounded-3xl border border-zinc-800 shadow-2xl">
+        <div className="w-full max-w-md space-y-8 bg-bg-card/50 dark:bg-zinc-900/50 backdrop-blur-xl p-10 rounded-3xl border border-border-color dark:border-zinc-800 shadow-2xl">
             <div className="text-center">
-                <h2 className="text-3xl font-bold tracking-tight text-white">Admin Access</h2>
-                <p className="mt-2 text-sm text-zinc-400">
+                <h2 className="text-3xl font-bold tracking-tight text-text-primary dark:text-white">Admin Access</h2>
+                <p className="mt-2 text-sm text-text-muted dark:text-zinc-400">
                     Sign in to manage your properties
                 </p>
             </div>
@@ -62,13 +62,13 @@ export default function AuthForm() {
                         </label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Mail className="h-5 w-5 text-zinc-500" />
+                                <Mail className="h-5 w-5 text-text-muted dark:text-zinc-500" />
                             </div>
                             <input
                                 id="email"
                                 type="email"
                                 autoComplete="email"
-                                className={`block w-full pl-10 pr-3 py-3 border rounded-xl leading-5 bg-zinc-950/50 text-zinc-300 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-zinc-700 focus:border-indigo-500'}`}
+                                className={`block w-full pl-10 pr-3 py-3 border rounded-xl leading-5 bg-bg-input dark:bg-zinc-950/50 text-text-primary dark:text-zinc-300 placeholder-text-muted dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-border-color dark:border-zinc-700 focus:border-indigo-500'}`}
                                 placeholder="Email address"
                                 {...register('email', {
                                     required: 'Email is required',
@@ -87,13 +87,13 @@ export default function AuthForm() {
                         </label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Lock className="h-5 w-5 text-zinc-500" />
+                                <Lock className="h-5 w-5 text-text-muted dark:text-zinc-500" />
                             </div>
                             <input
                                 id="password"
                                 type="password"
                                 autoComplete="current-password"
-                                className={`block w-full pl-10 pr-3 py-3 border rounded-xl leading-5 bg-zinc-950/50 text-zinc-300 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all ${errors.password ? 'border-red-500 focus:border-red-500' : 'border-zinc-700 focus:border-indigo-500'}`}
+                                className={`block w-full pl-10 pr-3 py-3 border rounded-xl leading-5 bg-bg-input dark:bg-zinc-950/50 text-text-primary dark:text-zinc-300 placeholder-text-muted dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all ${errors.password ? 'border-red-500 focus:border-red-500' : 'border-border-color dark:border-zinc-700 focus:border-indigo-500'}`}
                                 placeholder="Password"
                                 {...register('password', {
                                     required: 'Password is required',

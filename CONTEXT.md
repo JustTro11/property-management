@@ -121,6 +121,19 @@ interface Property {
 - Email notifications via Resend API
 - Custom React Email template
 
+### Theming (Light/Dark Mode)
+- **Default theme**: Dark mode
+- **Toggle**: Sun/moon icon in Navbar
+- **Persistence**: User preference stored in localStorage
+- **Implementation**: 
+  - `ThemeProvider.tsx` - React context for theme state
+  - `ThemeToggle.tsx` - Toggle button component
+  - Tailwind `dark:` variants for all styles
+  - CSS variables in `globals.css` for semantic colors
+- **Semantic classes**: `bg-bg-primary`, `text-text-primary`, `border-border-color`
+
+> **Important**: When adding/modifying styles, always use `dark:` variants to support both modes per project rules.
+
 ## Environment Variables
 
 ```env

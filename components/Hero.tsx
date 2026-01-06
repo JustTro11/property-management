@@ -6,7 +6,7 @@ export default function Hero() {
   const t = useTranslations('HomePage')
 
   return (
-    <div className="relative isolate overflow-hidden bg-black py-24 sm:py-32">
+    <div className="relative isolate overflow-hidden bg-bg-secondary dark:bg-black py-24 sm:py-32">
       <div
         className="absolute inset-0 -z-10 h-full w-full object-cover object-right md:object-center opacity-40"
         style={{
@@ -18,10 +18,10 @@ export default function Hero() {
       />
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:mx-0">
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl animate-fade-in-up">
+          <h1 className="text-4xl font-bold tracking-tight text-text-primary dark:text-white sm:text-6xl animate-fade-in-up">
             {t('heroTitle')} <span className="text-indigo-500">{t('heroHighlight')}</span>
           </h1>
-          <p className="mt-6 text-lg leading-8 text-gray-300">
+          <p className="mt-6 text-lg leading-8 text-text-secondary dark:text-gray-300">
             {t('heroSubtitle')}
           </p>
           <div className="mt-10 flex items-center gap-x-6">
@@ -31,7 +31,7 @@ export default function Hero() {
             >
               {t('browseProperties')} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link href="/about" className="text-sm font-semibold leading-6 text-white hover:text-indigo-300 transition-colors">
+            <Link href="/about" className="text-sm font-semibold leading-6 text-text-primary dark:text-white hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors">
               {t('learnMore')} <span aria-hidden="true">→</span>
             </Link>
           </div>

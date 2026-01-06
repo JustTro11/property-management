@@ -63,12 +63,12 @@ export default async function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-black">
+    <main className="min-h-screen bg-bg-primary dark:bg-black">
       <Hero />
 
       <section className="py-24 max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between mb-12">
-          <h2 className="text-3xl font-bold tracking-tight text-white mb-8 sm:mb-0">
+          <h2 className="text-3xl font-bold tracking-tight text-text-primary dark:text-white mb-8 sm:mb-0">
             {t('featuredListings')} <span className="text-indigo-500">{t('featuredHighlight')}</span>
           </h2>
         </div>

@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 
 import { Property } from '@/types'
@@ -41,7 +40,7 @@ export default function PropertyGallery({ images, title, status }: PropertyGalle
     return (
         <div className="space-y-4">
             {/* Main Image */}
-            <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 relative group">
+            <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border-color dark:border-zinc-800 bg-bg-secondary dark:bg-zinc-900 relative group">
                 <img
                     src={imgError[currentIndex] ? defaultImage : displayImages[currentIndex]}
                     alt={`${title} - Image ${currentIndex + 1}`}
@@ -87,7 +86,7 @@ export default function PropertyGallery({ images, title, status }: PropertyGalle
                             onClick={() => selectImage(idx)}
                             className={`aspect-square overflow-hidden rounded-lg border-2 transition-all ${idx === currentIndex
                                 ? 'border-indigo-500 opacity-100'
-                                : 'border-transparent opacity-60 hover:opacity-100 hover:border-zinc-700'
+                                : 'border-transparent opacity-60 hover:opacity-100 hover:border-border-color dark:hover:border-zinc-700'
                                 }`}
                         >
                             <img

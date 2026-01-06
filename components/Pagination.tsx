@@ -29,17 +29,17 @@ export default function Pagination({ totalPages, currentPage, totalItems, itemsP
     if (totalPages <= 1) return null
 
     return (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-12 py-6 border-t border-zinc-800">
-            <div className="text-zinc-400 text-sm">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-12 py-6 border-t border-border-color dark:border-zinc-800">
+            <div className="text-text-muted dark:text-zinc-400 text-sm">
                 {t('showing', { start: startItem, end: endItem, total: totalItems })}
             </div>
 
             <div className="flex items-center gap-2">
                 <Link
                     href={currentPage > 1 ? createPageURL(currentPage - 1) : '#'}
-                    className={`p-2 rounded-lg border border-zinc-800 transition-colors ${currentPage > 1
-                        ? 'text-white hover:bg-zinc-800 hover:border-zinc-700'
-                        : 'text-zinc-600 cursor-not-allowed'
+                    className={`p-2 rounded-lg border border-border-color dark:border-zinc-800 transition-colors ${currentPage > 1
+                        ? 'text-text-primary dark:text-white hover:bg-bg-secondary dark:hover:bg-zinc-800 hover:border-indigo-500/50 dark:hover:border-zinc-700'
+                        : 'text-text-muted dark:text-zinc-600 cursor-not-allowed'
                         }`}
                     aria-disabled={currentPage <= 1}
                 >
@@ -54,7 +54,7 @@ export default function Pagination({ totalPages, currentPage, totalItems, itemsP
                             href={createPageURL(page)}
                             className={`w-10 h-10 flex items-center justify-center rounded-lg border text-sm font-medium transition-colors ${currentPage === page
                                 ? 'bg-indigo-600 border-indigo-600 text-white'
-                                : 'border-zinc-800 text-zinc-400 hover:bg-zinc-800 hover:text-white'
+                                : 'border-border-color dark:border-zinc-800 text-text-secondary dark:text-zinc-400 hover:bg-bg-secondary dark:hover:bg-zinc-800 hover:text-text-primary dark:hover:text-white'
                                 }`}
                         >
                             {page}
@@ -64,9 +64,9 @@ export default function Pagination({ totalPages, currentPage, totalItems, itemsP
 
                 <Link
                     href={currentPage < totalPages ? createPageURL(currentPage + 1) : '#'}
-                    className={`p-2 rounded-lg border border-zinc-800 transition-colors ${currentPage < totalPages
-                        ? 'text-white hover:bg-zinc-800 hover:border-zinc-700'
-                        : 'text-zinc-600 cursor-not-allowed'
+                    className={`p-2 rounded-lg border border-border-color dark:border-zinc-800 transition-colors ${currentPage < totalPages
+                        ? 'text-text-primary dark:text-white hover:bg-bg-secondary dark:hover:bg-zinc-800 hover:border-indigo-500/50 dark:hover:border-zinc-700'
+                        : 'text-text-muted dark:text-zinc-600 cursor-not-allowed'
                         }`}
                     aria-disabled={currentPage >= totalPages}
                 >

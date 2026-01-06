@@ -134,13 +134,13 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
     const totalPages = Math.ceil(totalItems / itemsPerPage)
 
     return (
-        <main className="min-h-screen bg-black pt-32 pb-12 px-6 lg:px-8">
+        <main className="min-h-screen bg-bg-primary dark:bg-black pt-32 pb-12 px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
-                    <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+                    <h1 className="text-4xl font-bold tracking-tight text-text-primary dark:text-white sm:text-5xl">
                         {t('title')} <span className="text-indigo-500">{t('highlight')}</span>
                     </h1>
-                    <p className="mt-4 text-lg text-zinc-400">
+                    <p className="mt-4 text-lg text-text-muted dark:text-zinc-400">
                         {t('subtitle')}
                     </p>
                 </div>
@@ -148,10 +148,10 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
                 <PropertyFilters />
 
                 {properties.length === 0 ? (
-                    <div className="text-center py-20 bg-zinc-900/50 rounded-2xl border border-zinc-800">
-                        <p className="text-zinc-400 text-lg">No properties found matching your criteria.</p>
+                    <div className="text-center py-20 bg-bg-secondary/50 dark:bg-zinc-900/50 rounded-2xl border border-border-color dark:border-zinc-800">
+                        <p className="text-text-muted dark:text-zinc-400 text-lg">No properties found matching your criteria.</p>
                         {query || minPrice || maxPrice || beds || status ? (
-                            <p className="text-zinc-500 mt-2 text-sm">Try adjusting your filters.</p>
+                            <p className="text-text-muted dark:text-zinc-500 mt-2 text-sm">Try adjusting your filters.</p>
                         ) : null}
                     </div>
                 ) : (

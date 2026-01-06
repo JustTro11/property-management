@@ -74,13 +74,13 @@ export default function BookTourModal({ isOpen, onClose, propertyTitle }: BookTo
                 onClick={onClose}
             />
 
-            <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden transform transition-all">
+            <div className="relative w-full max-w-lg bg-bg-card dark:bg-zinc-900 border border-border-color dark:border-zinc-800 rounded-2xl shadow-2xl overflow-hidden transform transition-all">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-zinc-800">
-                    <h3 className="text-xl font-bold text-white">{t('title')}</h3>
+                <div className="flex items-center justify-between p-6 border-b border-border-color dark:border-zinc-800">
+                    <h3 className="text-xl font-bold text-text-primary dark:text-white">{t('title')}</h3>
                     <button
                         onClick={onClose}
-                        className="p-2 text-zinc-400 hover:text-white rounded-full hover:bg-zinc-800 transition-colors"
+                        className="p-2 text-text-muted dark:text-zinc-400 hover:text-text-primary dark:hover:text-white rounded-full hover:bg-bg-secondary dark:hover:bg-zinc-800 transition-colors"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -93,8 +93,8 @@ export default function BookTourModal({ isOpen, onClose, propertyTitle }: BookTo
                             <div className="w-16 h-16 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mb-2">
                                 <Check className="w-8 h-8" />
                             </div>
-                            <h4 className="text-2xl font-bold text-white">{t('successTitle')}</h4>
-                            <p className="text-zinc-400">
+                            <h4 className="text-2xl font-bold text-text-primary dark:text-white">{t('successTitle')}</h4>
+                            <p className="text-text-muted dark:text-zinc-400">
                                 {t.rich('successMessage', {
                                     property: propertyTitle,
                                     strong: (chunks) => <strong>{chunks}</strong>
@@ -103,27 +103,27 @@ export default function BookTourModal({ isOpen, onClose, propertyTitle }: BookTo
                         </div>
                     ) : (
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                            <p className="text-sm text-zinc-400 mb-4">
-                                {t('subtitle')} <span className="text-indigo-400 font-medium">{propertyTitle}</span>.
+                            <p className="text-sm text-text-muted dark:text-zinc-400 mb-4">
+                                {t('subtitle')} <span className="text-indigo-500 dark:text-indigo-400 font-medium">{propertyTitle}</span>.
                             </p>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <label className="text-xs font-medium text-zinc-500 uppercase">{t('fields.name')}</label>
+                                    <label className="text-xs font-medium text-text-muted dark:text-zinc-500 uppercase">{t('fields.name')}</label>
                                     <input
                                         type="text"
                                         placeholder="John Doe"
-                                        className={`w-full bg-black/50 border rounded-lg px-4 py-3 text-white focus:outline-none transition-colors ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-zinc-800 focus:border-indigo-500'}`}
+                                        className={`w-full bg-bg-input dark:bg-black/50 border rounded-lg px-4 py-3 text-text-primary dark:text-white focus:outline-none transition-colors ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-border-color dark:border-zinc-800 focus:border-indigo-500'}`}
                                         {...register('name', { required: t('fields.nameRequired') })}
                                     />
                                     {errors.name && <span className="text-xs text-red-500">{errors.name.message}</span>}
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-xs font-medium text-zinc-500 uppercase">{t('fields.phone')}</label>
+                                    <label className="text-xs font-medium text-text-muted dark:text-zinc-500 uppercase">{t('fields.phone')}</label>
                                     <input
                                         type="tel"
                                         placeholder="(555) 000-0000"
-                                        className={`w-full bg-black/50 border rounded-lg px-4 py-3 text-white focus:outline-none transition-colors ${errors.phone ? 'border-red-500 focus:border-red-500' : 'border-zinc-800 focus:border-indigo-500'}`}
+                                        className={`w-full bg-bg-input dark:bg-black/50 border rounded-lg px-4 py-3 text-text-primary dark:text-white focus:outline-none transition-colors ${errors.phone ? 'border-red-500 focus:border-red-500' : 'border-border-color dark:border-zinc-800 focus:border-indigo-500'}`}
                                         {...register('phone', {
                                             required: t('fields.phoneRequired'),
                                             pattern: {
@@ -137,11 +137,11 @@ export default function BookTourModal({ isOpen, onClose, propertyTitle }: BookTo
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-medium text-zinc-500 uppercase">{t('fields.email')}</label>
+                                <label className="text-xs font-medium text-text-muted dark:text-zinc-500 uppercase">{t('fields.email')}</label>
                                 <input
                                     type="email"
                                     placeholder="john@example.com"
-                                    className={`w-full bg-black/50 border rounded-lg px-4 py-3 text-white focus:outline-none transition-colors ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-zinc-800 focus:border-indigo-500'}`}
+                                    className={`w-full bg-bg-input dark:bg-black/50 border rounded-lg px-4 py-3 text-text-primary dark:text-white focus:outline-none transition-colors ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-border-color dark:border-zinc-800 focus:border-indigo-500'}`}
                                     {...register('email', {
                                         required: t('fields.emailRequired'),
                                         pattern: {
@@ -154,11 +154,11 @@ export default function BookTourModal({ isOpen, onClose, propertyTitle }: BookTo
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-medium text-zinc-500 uppercase">{t('fields.date')}</label>
+                                <label className="text-xs font-medium text-text-muted dark:text-zinc-500 uppercase">{t('fields.date')}</label>
                                 <div className="relative">
                                     <input
                                         type="date"
-                                        className={`w-full bg-black/50 border rounded-lg px-4 py-3 text-white focus:outline-none transition-colors [&::-webkit-calendar-picker-indicator]:invert ${errors.date ? 'border-red-500 focus:border-red-500' : 'border-zinc-800 focus:border-indigo-500'}`}
+                                        className={`w-full bg-bg-input dark:bg-black/50 border rounded-lg px-4 py-3 text-text-primary dark:text-white focus:outline-none transition-colors dark:[&::-webkit-calendar-picker-indicator]:invert ${errors.date ? 'border-red-500 focus:border-red-500' : 'border-border-color dark:border-zinc-800 focus:border-indigo-500'}`}
                                         {...register('date', {
                                             required: t('fields.dateRequired'),
                                             validate: (value) => {

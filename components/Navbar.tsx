@@ -1,17 +1,17 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Menu, X, Home as HomeIcon, Globe } from 'lucide-react'
+import { Menu, X, Home as HomeIcon } from 'lucide-react'
 import { supabase } from '@/lib/supabaseClient'
 import { Link, usePathname, useRouter } from '@/lib/navigation'
-import { useTranslations, useLocale } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import ThemeToggle from './ThemeToggle'
+import LocaleSwitcher from './LocaleSwitcher'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [session, setSession] = useState<any>(null)
   const t = useTranslations('Navigation')
-  const locale = useLocale()
   const router = useRouter()
   const pathname = usePathname()
 
@@ -34,9 +34,7 @@ export default function Navbar() {
     router.refresh()
   }
 
-  const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    router.replace(pathname, { locale: e.target.value })
-  }
+
 
   return (
     <nav className="fixed w-full z-50 top-0 start-0 border-b border-border-color bg-bg-primary/80 backdrop-blur-md">
@@ -63,18 +61,7 @@ export default function Navbar() {
                 {t('about')}
               </Link>
 
-              <div className="flex items-center space-x-2 text-text-secondary bg-bg-secondary py-1 px-3 rounded-full border border-border-color">
-                <Globe className="h-3.5 w-3.5" />
-                <select
-                  onChange={handleLocaleChange}
-                  defaultValue={locale}
-                  className="bg-transparent text-sm focus:outline-none cursor-pointer appearance-none pr-2"
-                >
-                  <option value="en" className="bg-bg-primary text-text-primary">English</option>
-                  <option value="es" className="bg-bg-primary text-text-primary">Español</option>
-                  <option value="zh" className="bg-bg-primary text-text-primary">中文</option>
-                </select>
-              </div>
+              <LocaleSwitcher />
 
               <ThemeToggle />
 
@@ -121,18 +108,7 @@ export default function Navbar() {
             </Link>
 
             <div className="px-3 py-2">
-              <div className="flex items-center space-x-2 text-text-secondary">
-                <Globe className="h-5 w-5" />
-                <select
-                  onChange={handleLocaleChange}
-                  defaultValue={locale}
-                  className="bg-transparent text-base focus:outline-none w-full"
-                >
-                  <option value="en" className="bg-bg-primary text-text-primary">English</option>
-                  <option value="es" className="bg-bg-primary text-text-primary">Español</option>
-                  <option value="zh" className="bg-bg-primary text-text-primary">中文</option>
-                </select>
-              </div>
+              <LocaleSwitcher />
             </div>
 
             {session ? (

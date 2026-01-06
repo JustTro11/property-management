@@ -9,7 +9,7 @@ export default function ThemeToggle() {
     // Show placeholder during SSR or before mount
     if (!themeContext || !themeContext.mounted) {
         return (
-            <div className="p-2 rounded-full bg-zinc-800/50 border border-zinc-700 w-8 h-8" />
+            <div className="p-2 rounded-full bg-bg-secondary border border-border-color w-8 h-8" />
         )
     }
 
@@ -18,11 +18,11 @@ export default function ThemeToggle() {
     return (
         <button
             onClick={toggleTheme}
-            className="p-2 rounded-full bg-zinc-800/50 dark:bg-white/10 hover:bg-zinc-700/50 dark:hover:bg-white/20 border border-zinc-700 dark:border-white/10 transition-all"
+            className="p-2 rounded-full bg-bg-secondary hover:bg-bg-secondary/80 border border-border-color text-text-secondary hover:text-text-primary transition-all"
             aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
         >
             {theme === 'dark' ? (
-                <Sun className="h-4 w-4 text-yellow-400" />
+                <Sun className="h-4 w-4 text-yellow-500" />
             ) : (
                 <Moon className="h-4 w-4 text-indigo-500" />
             )}

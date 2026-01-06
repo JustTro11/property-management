@@ -1,0 +1,118 @@
+{
+    "HomePage": {
+        "title": "LuxeLiving",
+        "heroTitle": "探索您夢想中的",
+        "heroHighlight": "庇護所",
+        "heroSubtitle": "為獨具慧眼的租戶提供獨家房產。在我們精心策劃的高級住宅系列中體驗奢華、舒適和時尚。",
+        "browseProperties": "瀏覽房產",
+        "learnMore": "了解更多",
+        "featuredListings": "精選",
+        "featuredHighlight": "房源"
+    },
+    "PropertiesPage": {
+        "title": "我們的獨家",
+        "highlight": "精選系列",
+        "subtitle": "瀏覽我們精心挑選的高級房產。"
+    },
+    "AboutPage": {
+        "title": "關於",
+        "highlight": "LuxeLiving",
+        "intro": "我們不僅僅是物業經理；主要是為了打造卓越的生活體驗。自2010年以來，LuxeLiving為高級物業管理設定了標準。",
+        "cards": {
+            "tenant": {
+                "title": "以租戶為中心",
+                "desc": "我們的租戶是我們的首要任務。我們提供白手套服務，確保您的舒適和滿意。"
+            },
+            "secure": {
+                "title": "安全可靠",
+                "desc": "我們利用最先進的技術和嚴格的驗證流程來確保安全和安心。"
+            },
+            "availability": {
+                "title": "24/7 全天候服務",
+                "desc": "凌晨3點有維修問題？我們在這裡。我們的支援團隊全天候待命。"
+            }
+        },
+        "philosophy": {
+            "title": "我們的理念",
+            "content": "「我們相信家不僅僅是一個物理空間；它是一個庇護所。這就是為什麼我們要精心挑選我們投資組合中的每一處房產，以確保它符合我們在設計、位置和品質方面的嚴格標準。我們不僅僅管理房產；我們培養生活方式。」",
+            "team": "LuxeLiving團隊"
+        },
+        "cta": {
+            "title": "準備好尋找您的下一個家了嗎？",
+            "button": "瀏覽房源"
+        }
+    },
+    "Navigation": {
+        "home": "首頁",
+        "properties": "房產",
+        "about": "關於我們",
+        "login": "登入"
+    },
+    "PropertyCard": {
+        "perMonth": "/月",
+        "beds": "床",
+        "baths": "浴",
+        "sqft": "平方英尺",
+        "status": {
+            "available": "招租",
+            "rented": "已租",
+            "maintenance": "維護中"
+        }
+    },
+    "PropertyDetails": {
+        "backToListings": "返回房源列表",
+        "description": "描述",
+        "noDescription": "未提供描述。",
+        "monthlyRent": "月租",
+        "perMonth": "/月",
+        "share": "分享房產",
+        "linkCopied": "連結已複製！",
+        "bookTour": "預約看房",
+        "unavailable": "暫無",
+        "beds": "床",
+        "baths": "浴",
+        "sqft": "平方英尺",
+        "status": {
+            "available": "招租",
+            "maintenance": "維護中 (暫無)",
+            "rented": "已租 (暫無)"
+        }
+    },
+    "BookTour": {
+        "title": "預約看房",
+        "subtitle": "預約參觀",
+        "successTitle": "請求已發送！",
+        "successMessage": "我們已收到您對 {property} 的請求。租賃代理將很快與您聯繫。",
+        "fields": {
+            "name": "姓名",
+            "nameRequired": "姓名為必填項",
+            "phone": "電話",
+            "phoneRequired": "電話為必填項",
+            "phoneInvalid": "無效的電話號碼",
+            "email": "電子郵件",
+            "emailRequired": "電子郵件為必填項",
+            "emailInvalid": "無效的電子郵件地址",
+            "date": "首選日期",
+            "dateRequired": "日期為必填項",
+            "datePast": "日期不能是過去的時間"
+        },
+        "submit": "請求參觀"
+    },
+    "PropertyFilters": {
+        "searchPlaceholder": "按標題或地址搜尋...",
+        "priceRange": "價格範圍",
+        "minPrice": "最低價格",
+        "maxPrice": "最高價格",
+        "bedrooms": "臥室",
+        "anyBeds": "不限臥室",
+        "bedsPlus": "{count}+ 臥室",
+        "status": "狀態",
+        "anyStatus": "不限狀態",
+        "clear": "清除篩選"
+    },
+    "Pagination": {
+        "previous": "上一頁",
+        "next": "下一頁",
+        "showing": "顯示 {start}-{end} 共 {total} 處房產"
+    }
+}

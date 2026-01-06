@@ -91,8 +91,8 @@ interface Property {
 ## Key Features
 
 ### Internationalization (i18n)
-- **Supported locales**: English (`en`), Spanish (`es`), Chinese (`zh`)
-- **Locale routing**: `/en/properties`, `/es/properties`, `/zh/properties`
+- **Supported locales**: English (`en`), Spanish (`es`), Simplified Chinese (`zh`), Traditional Chinese (`zh-TW`)
+- **Locale routing**: `/en/properties`, `/es/properties`, `/zh/properties`, `/zh-TW/properties`
 - **Middleware**: Auto-detects browser locale, redirects accordingly
 - **Translation files**: `messages/*.json`
 

@@ -8,7 +8,8 @@ import { useLocale } from 'next-intl'
 const locales = [
     { code: 'en', name: 'English', flag: '🇺🇸' },
     { code: 'es', name: 'Español', flag: '🇪🇸' },
-    { code: 'zh', name: '中文', flag: '🇨🇳' },
+    { code: 'zh', name: '简体中文', flag: '🇨🇳' },
+    { code: 'zh-TW', name: '繁體中文', flag: '🇹🇼' },
 ]
 
 export default function LocaleSwitcher() {
@@ -64,8 +65,8 @@ export default function LocaleSwitcher() {
                             key={loc.code}
                             onClick={() => handleLocaleChange(loc.code)}
                             className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-bg-secondary transition-colors ${locale === loc.code
-                                    ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-500/10'
-                                    : 'text-text-primary'
+                                ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-500/10'
+                                : 'text-text-primary'
                                 }`}
                             role="option"
                             aria-selected={locale === loc.code}

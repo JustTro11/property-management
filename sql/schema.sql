@@ -1,3 +1,6 @@
+-- Enable the UUID extension (required for uuid_generate_v4())
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 create table properties (
   id uuid default uuid_generate_v4() primary key,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
@@ -5,7 +8,8 @@ create table properties (
   description text,
   price numeric not null,
   address text not null,
-  image_url text,
+  image_url text, -- Kept for backwards compatibility
+  images text[] default '{}', -- New array column for multiple images
   sqft integer,
   bedrooms integer,
   bathrooms integer,

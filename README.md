@@ -64,10 +64,8 @@ LuxeLiving is a premium property rental management application built with **Next
 
 4. **Database Migration**
    Run the SQL scripts in `sql/` against your Supabase project in this order:
-   1. `schema.sql` (Tables & RLS)
-   2. `migration_uuid.sql` (Extensions)
-   3. `migration_images.sql` (Columns)
-   4. `seed_data.sql` (Initial Data - 20+ properties)
+   1. `schema.sql` (Tables, RLS, Extensions)
+   2. `seed_data.sql` (Initial Data - 20+ properties)
 
 5. **Run Development Server**
    ```bash

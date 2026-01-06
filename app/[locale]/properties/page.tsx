@@ -77,56 +77,65 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
     let properties: Property[] = []
     let totalItems = 0
 
-    try {
-        let dbQuery = supabase
-            .from('properties')
-            .select('*', { count: 'exact' })
+    // Check if Supabase is configured
+    const isSupabaseConfigured = !!process.env.NEXT_PUBLIC_SUPABASE_URL
 
-        // Apply Filters
-        if (query) {
-            dbQuery = dbQuery.or(`title.ilike.%${query}%,address.ilike.%${query}%`)
+    if (isSupabaseConfigured) {
+        try {
+            let dbQuery = supabase
+                .from('properties')
+                .select('*', { count: 'exact' })
+
+            // Apply Filters
+            if (query) {
+                dbQuery = dbQuery.or(`title.ilike.%${query}%,address.ilike.%${query}%`)
+            }
+            if (minPrice) {
+                dbQuery = dbQuery.gte('price', minPrice)
+            }
+            if (maxPrice) {
+                dbQuery = dbQuery.lte('price', maxPrice)
+            }
+            if (beds) {
+                dbQuery = dbQuery.gte('bedrooms', beds)
+            }
+            if (status) {
+                dbQuery = dbQuery.eq('status', status)
+            }
+
+            // Apply Custom Sort (Available -> Maintenance -> Rented)
+            // Note: Complex custom sorting is hard in raw SQL/Supabase without a computed column.
+            // For simplicity with pagination, we will use standard sorting (created_at) OR fetch all and sort in memory if the dataset is small.
+            // Since we need pagination on the DB side for performance, implementing complex custom sort via SQL is tricky without stored procedures or custom types.
+            // However, for this task, let's prioritize correct Filtering and Pagination over the specific custom sort *if* they conflict.
+            // But we can try to chain .order(). Ideally we want: status=available (1), status=maintenance (2), status=rented (3).
+            // Since 'available' < 'maintenance' < 'rented' alphabetically: 'available' overlaps.
+            // Alphabetical: available, maintenance, rented. This coincidentally matches our desired order!
+            // So we can just order by status ascending.
+
+            dbQuery = dbQuery
+                .order('status', { ascending: true })
+                .order('created_at', { ascending: false })
+                .range(startRange, endRange)
+
+            const { data, count, error } = await dbQuery
+
+            if (error) {
+                console.error('Supabase error:', error)
+                throw error
+            }
+
+            properties = data as Property[] || []
+            totalItems = count || 0
+
+        } catch (e) {
+            console.error('Error fetching properties:', e)
+            // Fallback (search is not supported in fallback)
+            properties = MOCK_PROPERTIES as unknown as Property[]
+            totalItems = MOCK_PROPERTIES.length
         }
-        if (minPrice) {
-            dbQuery = dbQuery.gte('price', minPrice)
-        }
-        if (maxPrice) {
-            dbQuery = dbQuery.lte('price', maxPrice)
-        }
-        if (beds) {
-            dbQuery = dbQuery.gte('bedrooms', beds)
-        }
-        if (status) {
-            dbQuery = dbQuery.eq('status', status)
-        }
-
-        // Apply Custom Sort (Available -> Maintenance -> Rented)
-        // Note: Complex custom sorting is hard in raw SQL/Supabase without a computed column.
-        // For simplicity with pagination, we will use standard sorting (created_at) OR fetch all and sort in memory if the dataset is small.
-        // Since we need pagination on the DB side for performance, implementing complex custom sort via SQL is tricky without stored procedures or custom types.
-        // However, for this task, let's prioritize correct Filtering and Pagination over the specific custom sort *if* they conflict.
-        // But we can try to chain .order(). Ideally we want: status=available (1), status=maintenance (2), status=rented (3).
-        // Since 'available' < 'maintenance' < 'rented' alphabetically: 'available' overlaps.
-        // Alphabetical: available, maintenance, rented. This coincidentally matches our desired order!
-        // So we can just order by status ascending.
-
-        dbQuery = dbQuery
-            .order('status', { ascending: true })
-            .order('created_at', { ascending: false })
-            .range(startRange, endRange)
-
-        const { data, count, error } = await dbQuery
-
-        if (error) {
-            console.error('Supabase error:', error)
-            throw error
-        }
-
-        properties = data as Property[] || []
-        totalItems = count || 0
-
-    } catch (e) {
-        console.error('Error fetching properties:', e)
-        // Fallback (search is not supported in fallback)
+    } else {
+        // Fallback for when Supabase is not configured (avoid DNS errors)
         properties = MOCK_PROPERTIES as unknown as Property[]
         totalItems = MOCK_PROPERTIES.length
     }

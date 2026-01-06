@@ -8,4 +8,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
     console.warn('Missing Supabase environment variables')
 }
 
-export const supabase = createBrowserClient(supabaseUrl || '', supabaseAnonKey || '')
+// Fallback to valid-looking placeholders to prevent crash during build/test if env vars are missing
+const url = supabaseUrl || 'http://127.0.0.1:9999'
+const key = supabaseAnonKey || 'placeholder-key'
+
+export const supabase = createBrowserClient(url, key)

@@ -72,6 +72,8 @@ LuxeLiving is a premium property rental management application built with **Next
 5. **Run Development Server**
    ```bash
    npm run dev
+   # Windows users: if you encounter permission errors, try:
+   # cmd /c npm run dev
    ```
    Open [http://localhost:3000](http://localhost:3000) to view the app.
 

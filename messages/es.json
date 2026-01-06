@@ -1,0 +1,118 @@
+{
+    "HomePage": {
+        "title": "LuxeLiving",
+        "heroTitle": "Descubra su",
+        "heroHighlight": "Santuario",
+        "heroSubtitle": "Propiedades exclusivas para el inquilino exigente. Experimente lujo, confort y estilo en nuestra colección curada.",
+        "browseProperties": "Explorar Propiedades",
+        "learnMore": "Aprender más",
+        "featuredListings": "Listados",
+        "featuredHighlight": "Destacados"
+    },
+    "PropertiesPage": {
+        "title": "Nuestra Colección",
+        "highlight": "Exclusiva",
+        "subtitle": "Explore nuestra selección cuidadosamente elegida de propiedades premium."
+    },
+    "AboutPage": {
+        "title": "Sobre",
+        "highlight": "LuxeLiving",
+        "intro": "Somos más que administradores de propiedades; somos curadores de experiencias de vida excepcionales. Desde 2010, LuxeLiving ha establecido el estándar para la gestión de propiedades premium.",
+        "cards": {
+            "tenant": {
+                "title": "Centrado en Inquilinos",
+                "desc": "Nuestros inquilinos son nuestra prioridad. Ofrecemos servicio de guante blanco para asegurar su comodidad y satisfacción."
+            },
+            "secure": {
+                "title": "Seguro y Confiable",
+                "desc": "Utilizamos tecnología de punta y procesos rigurosos de verificación para asegurar seguridad y tranquilidad."
+            },
+            "availability": {
+                "title": "Disponibilidad 24/7",
+                "desc": "¿Problema de mantenimiento a las 3 AM? Estamos aquí. Nuestro equipo de soporte está disponible todo el día."
+            }
+        },
+        "philosophy": {
+            "title": "Nuestra Filosofía",
+            "content": "\"Creemos que un hogar es más que un espacio físico; es un santuario. Por eso seleccionamos meticulosamente cada propiedad en nuestro portafolio para asegurar que cumpla con nuestros exigentes estándares de diseño, ubicación y calidad. No solo administramos propiedades; cultivamos estilos de vida.\"",
+            "team": "El Equipo LuxeLiving"
+        },
+        "cta": {
+            "title": "¿Listo para encontrar su próximo hogar?",
+            "button": "Explorar Listados"
+        }
+    },
+    "Navigation": {
+        "home": "Inicio",
+        "properties": "Propiedades",
+        "about": "Acerca de",
+        "login": "Iniciar Sesión"
+    },
+    "PropertyCard": {
+        "perMonth": "/mes",
+        "beds": "Habs",
+        "baths": "Baños",
+        "sqft": "pies²",
+        "status": {
+            "available": "En Renta",
+            "rented": "Alquilado",
+            "maintenance": "Mantenimiento"
+        }
+    },
+    "PropertyDetails": {
+        "backToListings": "Volver a Listados",
+        "description": "Descripción",
+        "noDescription": "No hay descripción disponible.",
+        "monthlyRent": "Renta Mensual",
+        "perMonth": "/mes",
+        "share": "Compartir Propiedad",
+        "linkCopied": "¡Enlace Copiado!",
+        "bookTour": "Agendar Visita",
+        "unavailable": "No Disponible",
+        "beds": "Habs",
+        "baths": "Baños",
+        "sqft": "pies²",
+        "status": {
+            "available": "EN RENTA",
+            "maintenance": "MANTENIMIENTO (NO DISPONIBLE)",
+            "rented": "ALQUILADO (NO DISPONIBLE)"
+        }
+    },
+    "BookTour": {
+        "title": "Agendar Visita",
+        "subtitle": "Programe una visita para",
+        "successTitle": "¡Solicitud Enviada!",
+        "successMessage": "Hemos recibido su solicitud para {property}. Un agente de arrendamiento lo contactará pronto.",
+        "fields": {
+            "name": "Nombre",
+            "nameRequired": "El nombre es obligatorio",
+            "phone": "Teléfono",
+            "phoneRequired": "El teléfono es obligatorio",
+            "phoneInvalid": "Número de teléfono inválido",
+            "email": "Correo Electrónico",
+            "emailRequired": "El correo es obligatorio",
+            "emailInvalid": "Correo inválido",
+            "date": "Fecha Preferida",
+            "dateRequired": "La fecha es obligatoria",
+            "datePast": "La fecha no puede ser en el pasado"
+        },
+        "submit": "Solicitar Visita"
+    },
+    "PropertyFilters": {
+        "searchPlaceholder": "Buscar por título o dirección...",
+        "priceRange": "Rango de Precio",
+        "minPrice": "Precio Min",
+        "maxPrice": "Precio Max",
+        "bedrooms": "Habitaciones",
+        "anyBeds": "Cualquier Hab",
+        "bedsPlus": "{count}+ Habs",
+        "status": "Estado",
+        "anyStatus": "Cualquier Estado",
+        "clear": "Limpiar Filtros"
+    },
+    "Pagination": {
+        "previous": "Anterior",
+        "next": "Siguiente",
+        "showing": "Mostrando {start}-{end} de {total} propiedades"
+    }
+}

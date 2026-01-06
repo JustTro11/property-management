@@ -1,0 +1,118 @@
+{
+    "HomePage": {
+        "title": "LuxeLiving",
+        "heroTitle": "发现您梦想中的",
+        "heroHighlight": "庇护所",
+        "heroSubtitle": "为独具慧眼的租户提供独家房产。在我们精心策划的高级住宅系列中体验奢华、舒适和时尚。",
+        "browseProperties": "浏览房产",
+        "learnMore": "了解更多",
+        "featuredListings": "精选",
+        "featuredHighlight": "房源"
+    },
+    "PropertiesPage": {
+        "title": "我们的独家",
+        "highlight": "精选系列",
+        "subtitle": "浏览我们要精心挑选的高级房产。"
+    },
+    "AboutPage": {
+        "title": "关于",
+        "highlight": "LuxeLiving",
+        "intro": "我们不仅仅是物业经理；主要是为了打造卓越的生活体验。自2010年以来，LuxeLiving为高级物业管理设定了标准。",
+        "cards": {
+            "tenant": {
+                "title": "以租户为中心",
+                "desc": "我们的租户是我们的首要任务。我们提供白手套服务，确保您的舒适和满意。"
+            },
+            "secure": {
+                "title": "安全可靠",
+                "desc": "我们利用最先进的技术和严格的验证流程来确保安全和安心。"
+            },
+            "availability": {
+                "title": "24/7 全天候服务",
+                "desc": "凌晨3点有维修问题？我们在这里。我们的支持团队全天候待命。"
+            }
+        },
+        "philosophy": {
+            "title": "我们的理念",
+            "content": "“我们相信家不仅仅是一个物理空间；它是一个庇护所。这就是为什么我们要精心挑选我们投资组合中的每一处房产，以确保它符合我们在设计、位置和质量方面的严格标准。我们不仅仅管理房产；我们培养生活方式。”",
+            "team": "LuxeLiving团队"
+        },
+        "cta": {
+            "title": "准备好寻找您的下一个家了吗？",
+            "button": "浏览房源"
+        }
+    },
+    "Navigation": {
+        "home": "首页",
+        "properties": "房产",
+        "about": "关于我们",
+        "login": "登录"
+    },
+    "PropertyCard": {
+        "perMonth": "/月",
+        "beds": "床",
+        "baths": "浴",
+        "sqft": "平方英尺",
+        "status": {
+            "available": "招租",
+            "rented": "已租",
+            "maintenance": "维护中"
+        }
+    },
+    "PropertyDetails": {
+        "backToListings": "返回房源列表",
+        "description": "描述",
+        "noDescription": "未提供描述。",
+        "monthlyRent": "月租",
+        "perMonth": "/月",
+        "share": "分享房产",
+        "linkCopied": "链接已复制！",
+        "bookTour": "预约看房",
+        "unavailable": "暂无",
+        "beds": "床",
+        "baths": "浴",
+        "sqft": "平方英尺",
+        "status": {
+            "available": "招租",
+            "maintenance": "维护中 (暂无)",
+            "rented": "已租 (暂无)"
+        }
+    },
+    "BookTour": {
+        "title": "预约看房",
+        "subtitle": "预约参观",
+        "successTitle": "请求已发送！",
+        "successMessage": "我们已收到您对 {property} 的请求。租赁代理将很快与您联系。",
+        "fields": {
+            "name": "姓名",
+            "nameRequired": "姓名为必填项",
+            "phone": "电话",
+            "phoneRequired": "电话为必填项",
+            "phoneInvalid": "无效的电话号码",
+            "email": "电子邮件",
+            "emailRequired": "电子邮件为必填项",
+            "emailInvalid": "无效的电子邮件地址",
+            "date": "首选日期",
+            "dateRequired": "日期为必填项",
+            "datePast": "日期不能是过去的时间"
+        },
+        "submit": "请求参观"
+    },
+    "PropertyFilters": {
+        "searchPlaceholder": "按标题或地址搜索...",
+        "priceRange": "价格范围",
+        "minPrice": "最低价格",
+        "maxPrice": "最高价格",
+        "bedrooms": "卧室",
+        "anyBeds": "不限卧室",
+        "bedsPlus": "{count}+ 卧室",
+        "status": "状态",
+        "anyStatus": "不限状态",
+        "clear": "清除筛选"
+    },
+    "Pagination": {
+        "previous": "上一页",
+        "next": "下一页",
+        "showing": "显示 {start}-{end} 共 {total} 处房产"
+    }
+}

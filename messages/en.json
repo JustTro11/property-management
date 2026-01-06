@@ -1,0 +1,118 @@
+{
+    "HomePage": {
+        "title": "LuxeLiving",
+        "heroTitle": "Discover Your Dream",
+        "heroHighlight": "Sanctuary",
+        "heroSubtitle": "Exclusive properties for the discerning renter. Experience luxury, comfort, and style in our curated collection of premium homes.",
+        "browseProperties": "Browse Properties",
+        "learnMore": "Learn more",
+        "featuredListings": "Featured",
+        "featuredHighlight": "Listings"
+    },
+    "PropertiesPage": {
+        "title": "Our Exclusive",
+        "highlight": "Collection",
+        "subtitle": "Browse our hand-picked selection of premium properties."
+    },
+    "AboutPage": {
+        "title": "About",
+        "highlight": "LuxeLiving",
+        "intro": "We are more than just property managers; we are curators of exceptional living experiences. Since 2010, LuxeLiving has set the standard for premium property management.",
+        "cards": {
+            "tenant": {
+                "title": "Tenant Focused",
+                "desc": "Our tenants are our priority. We provide white-glove service to ensure your comfort and satisfaction."
+            },
+            "secure": {
+                "title": "Secure & Reliable",
+                "desc": "We utilize state-of-the-art technology and rigorous verification processes to ensure safety and peace of mind."
+            },
+            "availability": {
+                "title": "24/7 Availability",
+                "desc": "Maintenance issue at 3 AM? We're here. Our support team is available around the clock."
+            }
+        },
+        "philosophy": {
+            "title": "Our Philosophy",
+            "content": "\"We believe that a home is more than just a physical space; it's a sanctuary. That's why we meticulously select every property in our portfolio to ensure it meets our exacting standards of design, location, and quality. We don't just manage properties; we cultivate lifestyles.\"",
+            "team": "The LuxeLiving Team"
+        },
+        "cta": {
+            "title": "Ready to find your next home?",
+            "button": "Browse Listings"
+        }
+    },
+    "Navigation": {
+        "home": "Home",
+        "properties": "Properties",
+        "about": "About",
+        "login": "Login"
+    },
+    "PropertyCard": {
+        "perMonth": "/mo",
+        "beds": "Beds",
+        "baths": "Baths",
+        "sqft": "sqft",
+        "status": {
+            "available": "For Rent",
+            "rented": "Rented",
+            "maintenance": "Maintenance"
+        }
+    },
+    "PropertyDetails": {
+        "backToListings": "Back to Listings",
+        "description": "Description",
+        "noDescription": "No description provided.",
+        "monthlyRent": "Monthly Rent",
+        "perMonth": "/mo",
+        "share": "Share Property",
+        "linkCopied": "Link Copied!",
+        "bookTour": "Book a Tour",
+        "unavailable": "Unavailable",
+        "beds": "Beds",
+        "baths": "Baths",
+        "sqft": "sqft",
+        "status": {
+            "available": "FOR RENT",
+            "maintenance": "MAINTENANCE (UNAVAILABLE)",
+            "rented": "RENTED (UNAVAILABLE)"
+        }
+    },
+    "BookTour": {
+        "title": "Book a Tour",
+        "subtitle": "Schedule a viewing for",
+        "successTitle": "Request Sent!",
+        "successMessage": "We've received your request for {property}. A leasing agent will contact you shortly.",
+        "fields": {
+            "name": "Name",
+            "nameRequired": "Name is required",
+            "phone": "Phone",
+            "phoneRequired": "Phone is required",
+            "phoneInvalid": "Invalid phone number",
+            "email": "Email",
+            "emailRequired": "Email is required",
+            "emailInvalid": "Invalid email address",
+            "date": "Preferred Date",
+            "dateRequired": "Date is required",
+            "datePast": "Date cannot be in the past"
+        },
+        "submit": "Request Tour"
+    },
+    "PropertyFilters": {
+        "searchPlaceholder": "Search by title or address...",
+        "priceRange": "Price Range",
+        "minPrice": "Min Price",
+        "maxPrice": "Max Price",
+        "bedrooms": "Bedrooms",
+        "anyBeds": "Any Beds",
+        "bedsPlus": "{count}+ Beds",
+        "status": "Status",
+        "anyStatus": "Any Status",
+        "clear": "Clear Filters"
+    },
+    "Pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "showing": "Showing {start}-{end} of {total} properties"
+    }
+}

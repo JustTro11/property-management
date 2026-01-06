@@ -19,11 +19,19 @@ export async function POST(request: Request) {
             );
         }
 
+        const adminEmail = process.env.ADMIN_EMAIL;
+        if (!adminEmail) {
+            return NextResponse.json(
+                { error: 'ADMIN_EMAIL environment variable is not configured' },
+                { status: 500 }
+            );
+        }
+
         const emailHtml = await render(<TourRequestEmail name={name} email={email} phone={phone} date={date} propertyTitle={propertyTitle} />);
 
         const data = await resend.emails.send({
             from: 'LuxeLiving <onboarding@resend.dev>', // Default testing domain
-            to: [process.env.ADMIN_EMAIL || 'jenting8173@gmail.com'], // Configurable recipient
+            to: [adminEmail], // Configurable recipient
             subject: `Tour Request: ${propertyTitle}`,
             html: emailHtml,
         });

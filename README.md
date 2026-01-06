@@ -67,7 +67,7 @@ LuxeLiving is a premium property rental management application built with **Next
    1. `schema.sql` (Tables & RLS)
    2. `migration_uuid.sql` (Extensions)
    3. `migration_images.sql` (Columns)
-   4. `seed_data.sql` (Initial Data)
+   4. `seed_data.sql` (Initial Data - 20+ properties)
 
 5. **Run Development Server**
    ```bash

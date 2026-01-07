@@ -8,20 +8,7 @@ import PropertyActions from '@/components/PropertyActions'
 import { Property } from '@/types'
 import { getTranslations } from 'next-intl/server'
 
-// Mock data for fallback (same as landing page + description)
-const MOCK_PROPERTY_DETAILS = {
-    id: '1',
-    title: "Modern Downtown Loft",
-    price: 3500,
-    address: "123 Main St, City Center",
-    description: "Experience the pulse of the city in this stunning modern loft. Featuring high ceilings, exposed brick, and floor-to-ceiling windows, this unit offers the perfect blend of industrial charm and contemporary luxury. The open-concept living area is perfect for entertaining, while the state-of-the-art kitchen will inspire your inner chef. Amenities include a rooftop terrace, fitness center, and 24/7 concierge service.",
-    image_url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2670&auto=format&fit=crop",
-    images: ["https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2670&auto=format&fit=crop"],
-    sqft: 1200,
-    bedrooms: 2,
-    bathrooms: 2,
-    status: 'available' as Property['status']
-}
+import { MOCK_PROPERTIES } from '@/lib/mockData'
 
 export default async function PropertyDetails({ params }: { params: { id: string } }) {
     const { id } = await params
@@ -32,20 +19,30 @@ export default async function PropertyDetails({ params }: { params: { id: string
 
     // Fetch from Supabase
     try {
-        const { data, error } = await supabase
-            .from('properties')
-            .select('*')
-            .eq('id', id)
-            .single()
+        const isSupabaseConfigured = !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
+            !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder') &&
+            process.env.NEXT_PUBLIC_FORCE_MOCK_DATA !== 'true';
 
-        if (data) {
-            property = data
+        if (isSupabaseConfigured) {
+            const { data, error } = await supabase
+                .from('properties')
+                .select('*')
+                .eq('id', id)
+                .single()
+
+            if (data) {
+                property = data
+            } else {
+                // Fallback for demo if DB is empty and ID matches mock
+                // property = MOCK_PROPERTIES.find(p => p.id === id) || null
+                property = (MOCK_PROPERTIES.find(p => p.id === id) as Property) || null
+            }
         } else {
-            // Fallback for demo if DB is empty and ID matches mock
-            if (id === '1') property = MOCK_PROPERTY_DETAILS
+            // Fallback for when Supabase is not configured (avoid DNS errors)
+            property = (MOCK_PROPERTIES.find(p => p.id === id) as Property) || null
         }
     } catch (e) {
-        if (id === '1') property = MOCK_PROPERTY_DETAILS
+        property = (MOCK_PROPERTIES.find(p => p.id === id) as Property) || null
     }
 
     if (!property) {

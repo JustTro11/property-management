@@ -86,6 +86,16 @@ npm run test
 
 # Run E2E Tests (Navigation & Flows)
 npm run test:e2e
+
+# Run E2E Tests with Mock Data (bypasses Supabase)
+# Windows (CMD) - IMPORTANT: No space after true
+set NEXT_PUBLIC_FORCE_MOCK_DATA=true&& npm run test:e2e
+
+# Windows (PowerShell)
+$env:NEXT_PUBLIC_FORCE_MOCK_DATA="true"; npm run test:e2e
+
+# Mac/Linux
+NEXT_PUBLIC_FORCE_MOCK_DATA=true npm run test:e2e
 ```
 
 ## 📁 Project Structure

@@ -1,0 +1,64 @@
+import { Property } from '@/types'
+
+export const MOCK_PROPERTIES: Property[] = [
+    {
+        id: '1',
+        title: "Modern Downtown Loft",
+        price: 3500,
+        address: "123 Main St, City Center",
+        image_url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2670&auto=format&fit=crop",
+        images: ["https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2670&auto=format&fit=crop"],
+        sqft: 1200,
+        bedrooms: 2,
+        bathrooms: 2,
+        status: 'available',
+        description: "Experience the pulse of the city in this stunning modern loft. Featuring high ceilings, exposed brick, and floor-to-ceiling windows, this unit offers the perfect blend of industrial charm and contemporary luxury. The open-concept living area is perfect for entertaining, while the state-of-the-art kitchen will inspire your inner chef. Amenities include a rooftop terrace, fitness center, and 24/7 concierge service.",
+        created_at: new Date().toISOString(),
+
+    },
+    {
+        id: '2',
+        title: "Secluded Hilltop Villa",
+        price: 5200,
+        address: "45 Skyline Dr, Beverly Hills",
+        image_url: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2671&auto=format&fit=crop",
+        images: ["https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2671&auto=format&fit=crop"],
+        sqft: 2800,
+        bedrooms: 4,
+        bathrooms: 3,
+        status: 'available',
+        description: "Escape to your own private sanctuary in this secluded hilltop villa. Surrounded by lush greenery and offering panoramic views of the city, this property is the epitome of luxury living. Features include a gourmet kitchen, spacious master suite with private balcony, and a resort-style pool and spa. The perfect retreat for those seeking privacy and tranquility.",
+        created_at: new Date().toISOString(),
+
+    },
+    {
+        id: '3',
+        title: "Oceanfront Glass Home",
+        price: 8500,
+        address: "789 Pacific Coast Hwy, Malibu",
+        image_url: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2670&auto=format&fit=crop",
+        images: ["https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2670&auto=format&fit=crop"],
+        sqft: 3500,
+        bedrooms: 3,
+        bathrooms: 4,
+        status: 'rented',
+        description: "Live the dream in this breathtaking oceanfront glass home. With direct beach access and uninterrupted views of the Pacific Ocean, this property is truly one-of-a-kind. The modern design features floor-to-ceiling glass walls, an open floor plan, and high-end finishes throughout. Enjoy the sunset from your private deck or take a dip in the ocean just steps from your door.",
+        created_at: new Date().toISOString(),
+
+    },
+    {
+        id: '4',
+        title: "Eco-Friendly Forest Cabin",
+        price: 2800,
+        address: "88 Pine Cone Way, Portland",
+        image_url: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=2565&auto=format&fit=crop",
+        images: ["https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=2565&auto=format&fit=crop"],
+        sqft: 950,
+        bedrooms: 2,
+        bathrooms: 1,
+        status: 'maintenance',
+        description: "Reconnect with nature in this charming eco-friendly forest cabin. Nestled among towering pines, this cabin offers a peaceful retreat from the hustle and bustle of city life. The sustainable design features solar panels, rainwater harvesting, and locally sourced materials. Inside, you'll find a cozy living area with a wood-burning stove, a fully equipped kitchen, and comfortable sleeping quarters.",
+        created_at: new Date().toISOString(),
+
+    }
+]

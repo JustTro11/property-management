@@ -4,54 +4,11 @@ import Pagination from '@/components/Pagination'
 import { createClient } from '@/lib/supabaseServer'
 import { getTranslations } from 'next-intl/server'
 import { Property } from '@/types'
+import { Suspense } from 'react'
 
-// Mock data (shared with home page for now)
-const MOCK_PROPERTIES = [
-    {
-        id: '1',
-        title: "Modern Downtown Loft",
-        price: 3500,
-        address: "123 Main St, City Center",
-        image_url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2670&auto=format&fit=crop",
-        sqft: 1200,
-        bedrooms: 2,
-        bathrooms: 2,
-        status: 'available' as const
-    },
-    {
-        id: '2',
-        title: "Secluded Hilltop Villa",
-        price: 5200,
-        address: "45 Skyline Dr, Beverly Hills",
-        image_url: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2671&auto=format&fit=crop",
-        sqft: 2800,
-        bedrooms: 4,
-        bathrooms: 3,
-        status: 'available' as const
-    },
-    {
-        id: '3',
-        title: "Oceanfront Glass Home",
-        price: 8500,
-        address: "789 Pacific Coast Hwy, Malibu",
-        image_url: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2670&auto=format&fit=crop",
-        sqft: 3500,
-        bedrooms: 3,
-        bathrooms: 4,
-        status: 'rented' as const
-    },
-    {
-        id: '4',
-        title: "Eco-Friendly Forest Cabin",
-        price: 2800,
-        address: "88 Pine Cone Way, Portland",
-        image_url: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=2565&auto=format&fit=crop",
-        sqft: 950,
-        bedrooms: 2,
-        bathrooms: 1,
-        status: 'maintenance' as const
-    }
-]
+export const dynamic = 'force-dynamic'
+
+import { MOCK_PROPERTIES } from '@/lib/mockData'
 
 interface PropertiesPageProps {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
@@ -78,7 +35,9 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
     let totalItems = 0
 
     // Check if Supabase is configured
-    const isSupabaseConfigured = !!process.env.NEXT_PUBLIC_SUPABASE_URL
+    const isSupabaseConfigured = !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
+        !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder') &&
+        process.env.NEXT_PUBLIC_FORCE_MOCK_DATA?.trim() !== 'true';
 
     if (isSupabaseConfigured) {
         try {
@@ -130,14 +89,61 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
 
         } catch (e) {
             console.error('Error fetching properties:', e)
-            // Fallback (search is not supported in fallback)
-            properties = MOCK_PROPERTIES as unknown as Property[]
-            totalItems = MOCK_PROPERTIES.length
+            // Fallback with in-memory filtering
+            let filtered = MOCK_PROPERTIES as unknown as Property[]
+
+            if (query) {
+                const q = query.toLowerCase()
+                filtered = filtered.filter(p =>
+                    p.title.toLowerCase().includes(q) ||
+                    p.address.toLowerCase().includes(q)
+                )
+            }
+            if (minPrice) {
+                filtered = filtered.filter(p => p.price >= minPrice)
+            }
+            if (maxPrice) {
+                filtered = filtered.filter(p => p.price <= maxPrice)
+            }
+            if (beds) {
+                filtered = filtered.filter(p => p.bedrooms >= beds)
+            }
+            if (status) {
+                filtered = filtered.filter(p => p.status === status)
+            }
+
+            totalItems = filtered.length
+            // Apply pagination in memory
+            properties = filtered.slice(startRange, endRange + 1)
+            console.error('DEBUG: Mock Filter Result Count:', filtered.length)
         }
     } else {
+        console.error('DEBUG: Using Mock Data Fallback')
         // Fallback for when Supabase is not configured (avoid DNS errors)
-        properties = MOCK_PROPERTIES as unknown as Property[]
-        totalItems = MOCK_PROPERTIES.length
+        let filtered = MOCK_PROPERTIES as unknown as Property[]
+
+        if (query) {
+            const q = query.toLowerCase()
+            filtered = filtered.filter(p =>
+                p.title.toLowerCase().includes(q) ||
+                p.address.toLowerCase().includes(q)
+            )
+        }
+        if (minPrice) {
+            filtered = filtered.filter(p => p.price >= minPrice)
+        }
+        if (maxPrice) {
+            filtered = filtered.filter(p => p.price <= maxPrice)
+        }
+        if (beds) {
+            filtered = filtered.filter(p => p.bedrooms >= beds)
+        }
+        if (status) {
+            filtered = filtered.filter(p => p.status === status)
+        }
+
+        totalItems = filtered.length
+        properties = filtered.slice(startRange, endRange + 1)
     }
 
     const totalPages = Math.ceil(totalItems / itemsPerPage)
@@ -154,7 +160,9 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
                     </p>
                 </div>
 
-                <PropertyFilters />
+                <Suspense fallback={<div>Loading filters...</div>}>
+                    <PropertyFilters />
+                </Suspense>
 
                 {properties.length === 0 ? (
                     <div className="text-center py-20 bg-bg-secondary/50 dark:bg-zinc-900/50 rounded-2xl border border-border-color dark:border-zinc-800">

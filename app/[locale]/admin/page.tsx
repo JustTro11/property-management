@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabaseServer'
 import { Link, redirect } from '@/lib/navigation'
-import { Plus, Pencil, Trash2, Home } from 'lucide-react'
+import { Plus, Pencil, Home } from 'lucide-react'
 import PropertyThumbnail from '@/components/PropertyThumbnail'
+import DeletePropertyButton from '@/components/DeletePropertyButton'
 
 export default async function AdminDashboard({
     params
@@ -69,10 +70,10 @@ export default async function AdminDashboard({
                                                 >
                                                     <Pencil className="h-4 w-4" />
                                                 </Link>
-                                                {/* We would make this a client component or use a server action form for delete, keeping it simple for now */}
-                                                <button className="inline-flex items-center p-2 border border-red-200 dark:border-red-900/30 rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-                                                    <Trash2 className="h-4 w-4" />
-                                                </button>
+                                                <DeletePropertyButton
+                                                    propertyId={property.id}
+                                                    propertyTitle={property.title}
+                                                />
                                             </div>
                                         </div>
                                     </div>

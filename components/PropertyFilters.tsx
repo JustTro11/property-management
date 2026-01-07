@@ -45,8 +45,13 @@ export default function PropertyFilters() {
         // Reset page on filter change
         params.set('page', '1')
 
-        router.push(`${pathname}?${params.toString()}`)
-    }, [debouncedSearch, minPrice, maxPrice, beds, status, pathname, router])
+        const newUrl = `${pathname}?${params.toString()}`
+
+        // Prevent pushing if URL hasn't effectively changed to avoid race conditions
+        if (params.toString() !== searchParams.toString()) {
+            router.push(newUrl)
+        }
+    }, [debouncedSearch, minPrice, maxPrice, beds, status, pathname, router, searchParams]);
 
     const clearFilters = () => {
         setSearchTerm('')
@@ -56,7 +61,7 @@ export default function PropertyFilters() {
         setStatus('')
     }
 
-    const hasActiveFilters = minPrice || maxPrice || beds || status
+    const hasActiveFilters = searchTerm || minPrice || maxPrice || beds || status
 
     const bedroomOptions = ['', '1', '2', '3', '4', '5']
     const statusOptions = [

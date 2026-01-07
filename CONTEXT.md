@@ -175,7 +175,13 @@ npm run lint
 npm run test
 
 # Run E2E Tests
+# Run E2E Tests
 npm run test:e2e
+
+# Run E2E Tests with Mock Data (Force Mode)
+# Windows (CMD): set NEXT_PUBLIC_FORCE_MOCK_DATA=true&& npm run test:e2e
+# PowerShell: $env:NEXT_PUBLIC_FORCE_MOCK_DATA="true"; npm run test:e2e
+# Mac/Linux: NEXT_PUBLIC_FORCE_MOCK_DATA=true npm run test:e2e
 ```
 
 ## Database Setup

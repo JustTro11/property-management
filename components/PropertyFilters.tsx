@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter, usePathname } from '@/lib/navigation'
 import { useSearchParams } from 'next/navigation'
 import { Search, SlidersHorizontal, X, ChevronDown, DollarSign } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useDebounce } from 'use-debounce'
 
 export default function PropertyFilters() {
@@ -22,9 +22,15 @@ export default function PropertyFilters() {
     const [beds, setBeds] = useState(searchParams.get('beds') || '')
     const [status, setStatus] = useState(searchParams.get('status') || '')
     const [isFiltersOpen, setIsFiltersOpen] = useState(false)
+    const isMounted = useRef(false)
 
     // Sync URL with state
     useEffect(() => {
+        if (!isMounted.current) {
+            isMounted.current = true
+            return
+        }
+
         const params = new URLSearchParams(searchParams.toString())
 
         if (debouncedSearch) params.set('query', debouncedSearch)

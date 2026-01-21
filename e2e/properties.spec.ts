@@ -26,7 +26,8 @@ test.describe('Property Filtering & Navigation', () => {
 
     test('search filters properties by title', async ({ page }) => {
         // Navigate directly with query param to test server-side filtering logic
-        await page.goto('/en/properties?query=Oceanfront');
+        // Include page=1 to avoid client-side redirection race condition (PropertyFilters enforces page=1)
+        await page.goto('/en/properties?query=Oceanfront&page=1');
 
 
         // Expect "Oceanfront Glass Home" to be visible
@@ -42,7 +43,7 @@ test.describe('Property Filtering & Navigation', () => {
 
     test('filters by status', async ({ page }) => {
         // Navigate directly with status param
-        await page.goto('/en/properties?status=rented');
+        await page.goto('/en/properties?status=rented&page=1');
 
         // Expect "Oceanfront Glass Home" (which is rented in mock data)
         await expect(page.getByText('Oceanfront Glass Home')).toBeVisible();

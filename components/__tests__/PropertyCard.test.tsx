@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import PropertyCard from '@/components/PropertyCard'
 import { Property } from '@/types'
 
@@ -57,5 +57,41 @@ describe('PropertyCard', () => {
         const maintenanceProperty = { ...mockProperty, status: 'maintenance' as const }
         render(<PropertyCard property={maintenanceProperty} />)
         expect(screen.getByText('status.maintenance')).toBeInTheDocument()
+    })
+
+    it('uses image_url if images array is empty', () => {
+        const propertyWithoutImages = {
+            ...mockProperty,
+            images: [],
+            image_url: 'https://example.com/single-image.jpg'
+        }
+        render(<PropertyCard property={propertyWithoutImages} />)
+        const img = screen.getByAltText('Test Villa')
+        // Next.js Image component modifies src, so we check if it contains the url
+        expect(img.getAttribute('src')).toContain('single-image.jpg')
+    })
+
+    it('uses default fallback if no images provided at all', () => {
+        const propertyNoImages = {
+            ...mockProperty,
+            images: [],
+            image_url: null
+        } as unknown as Property
+        render(<PropertyCard property={propertyNoImages} />)
+        const img = screen.getByAltText('Test Villa')
+        // Check for the fallback URL used in component
+        expect(img.getAttribute('src')).toContain('photo-1560518883')
+    })
+
+    it('switches to fallback image on error', () => {
+        // Use a property that has a primary image
+        render(<PropertyCard property={mockProperty} />)
+        const img = screen.getByAltText('Test Villa')
+
+        // Simulate error on the main image
+        fireEvent.error(img)
+
+        // Should switch to fallback
+        expect(img.getAttribute('src')).toContain('photo-1560518883')
     })
 })

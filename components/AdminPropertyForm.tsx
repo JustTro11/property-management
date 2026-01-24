@@ -32,11 +32,17 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
                 : initialData.image_url || '',
             lat: initialData.lat || 0,
             lng: initialData.lng || 0,
-            amenities: initialData.amenities || []
+            amenities: initialData.amenities || [],
+            address1: initialData.address1 || '',
+            address2: initialData.address2 || '',
+            city: initialData.city || '',
+            state: initialData.state || '',
+            zip: initialData.zip || '',
+            address: initialData.address || '' // Ensure address is initialized if present
         } : {
             title: '',
             price: 0,
-            address: '',
+            address: '', // This will be populated by geocoding or derived
             description: '',
             image_url: '',
             sqft: 0,
@@ -46,7 +52,12 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
             imagesStr: '',
             lat: 0,
             lng: 0,
-            amenities: []
+            amenities: [],
+            address1: '',
+            address2: '',
+            city: '',
+            state: '',
+            zip: ''
         }
     })
 
@@ -66,50 +77,63 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
         setValue('amenities', updated)
     }
 
-    const address = watch('address')
-    const [debouncedAddress] = useDebounce(address, 1000)
+    // Watch split address fields
+    const address1 = watch('address1')
+    const city = watch('city')
+    const state = watch('state')
+    const zip = watch('zip')
+
+    // Combine for debounce
+    const combinedAddress = `${address1 || ''} ${city || ''} ${state || ''} ${zip || ''}`.trim()
+    const [debouncedAddress] = useDebounce(combinedAddress, 1000)
 
     useEffect(() => {
         register('amenities')
+        // Register the 'address' field as it's used in onSubmit but not directly in an input
+        register('address')
     }, [register])
 
     useEffect(() => {
         const fetchCoordinates = async () => {
             if (!debouncedAddress) return
 
-            // Avoid re-fetching if address matches initial (unless they changed it back, but good enough for now/optimization)
-            // But we do want to fetch if coordinates are 0/missing.
+            // Avoid re-fetching if coordinates are already set and matched (heuristic)
             const currentLat = getValues('lat')
             const currentLng = getValues('lng')
-            // Simple heuristic to avoid over-fetching on load if data exists
-            if (initialData?.address === debouncedAddress && currentLat !== 0 && currentLng !== 0) {
-                return;
+            // Only skip if we have coords and the address matches initial (edit mode optimization)
+            if (initialData && currentLat !== 0 && currentLng !== 0) {
+                const initialCombined = `${initialData.address1 || ''} ${initialData.city || ''} ${initialData.state || ''} ${initialData.zip || ''}`.trim()
+                if (initialCombined === debouncedAddress) return;
             }
 
             setGeocoding(true)
             try {
-                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(debouncedAddress)}`)
+                // Add addressdetails=1 to get components if needed, though mostly using lat/lon/display_name here
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(debouncedAddress)}&addressdetails=1&limit=1`)
                 const data = await response.json()
 
                 if (data && data.length > 0) {
-                    const { lat, lon, display_name } = data[0]
-                    setValue('lat', parseFloat(lat))
-                    setValue('lng', parseFloat(lon))
+                    const result = data[0]
+                    setValue('lat', parseFloat(result.lat))
+                    setValue('lng', parseFloat(result.lon))
 
-                    // Standardize address if it's significantly different (to avoid loops, though debounce helps)
-                    if (display_name && display_name !== debouncedAddress) {
-                        setValue('address', display_name)
-                    }
+                    // Optional: autofill missing fields from response? 
+                    // User explicitly asked for "split fields", implying they want control.
+                    // We will NOT overwrite what they typed, but we'll ensure lat/lng is synced.
+                    // If we wanted to standardise: we could update fields here.
+
+                    // For legacy support, construct the full address string
+                    setValue('address', result.display_name)
                 } else {
-                    // Reset if not found, or maybe keep 0?
-                    // User said "account for cases where there are no coordinates found".
-                    // Explicitly setting to 0 or null might be better so we don't keep stale data if address changed to something invalid.
                     setValue('lat', 0)
                     setValue('lng', 0)
+                    setValue('address', '') // Clear address if not found
                 }
             } catch (error) {
                 console.error('Geocoding error:', error)
-                // Optionally reset on error too
+                setValue('lat', 0)
+                setValue('lng', 0)
+                setValue('address', '')
             } finally {
                 setGeocoding(false)
             }
@@ -135,7 +159,8 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
             const propertyData = {
                 title: data.title,
                 price: Number(data.price),
-                address: data.address,
+                // Ensure legacy address is populated if geocoding didn't fill it yet
+                address: data.address || `${data.address1}, ${data.city}, ${data.state} ${data.zip}`,
                 description: data.description,
                 image_url: mainImage,
                 images: images,
@@ -145,7 +170,12 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
                 status: data.status,
                 lat: Number(data.lat),
                 lng: Number(data.lng),
-                amenities: data.amenities
+                amenities: data.amenities,
+                address1: data.address1,
+                address2: data.address2,
+                city: data.city,
+                state: data.state,
+                zip: data.zip
             }
 
             if (initialData?.id) {
@@ -208,18 +238,67 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
                     </div>
                 </div>
 
+                {/* Split Address Fields */}
                 <div className="sm:col-span-6">
-                    <label htmlFor="address" className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                        Address
-                    </label>
-                    <div className="mt-1">
-                        <input
-                            type="text"
-                            id="address"
-                            className={`block w-full rounded-md bg-zinc-50 dark:bg-black/50 text-text-primary shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-3 ${errors.address ? 'border-red-500' : 'border-zinc-200 dark:border-zinc-700'}`}
-                            {...register('address', { required: 'Address is required' })}
-                        />
-                        {errors.address && <span className="text-xs text-red-500">{errors.address.message}</span>}
+                    <h3 className="text-sm font-medium text-zinc-900 dark:text-white mb-3">Location Details</h3>
+                    <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
+                        <div className="sm:col-span-6">
+                            <label htmlFor="address1" className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">Address Line 1</label>
+                            <input
+                                type="text"
+                                id="address1"
+                                placeholder="123 Main St"
+                                className={`mt-1 block w-full rounded-md bg-zinc-50 dark:bg-black/50 text-text-primary shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-3 ${errors.address1 ? 'border-red-500' : 'border-zinc-200 dark:border-zinc-700'}`}
+                                {...register('address1', { required: 'Address Line 1 is required' })}
+                            />
+                            {errors.address1 && <span className="text-xs text-red-500">{errors.address1.message}</span>}
+                        </div>
+
+                        <div className="sm:col-span-6">
+                            <label htmlFor="address2" className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">Address Line 2 (Optional)</label>
+                            <input
+                                type="text"
+                                id="address2"
+                                placeholder="Apt 4B"
+                                className="mt-1 block w-full rounded-md bg-zinc-50 dark:bg-black/50 text-text-primary shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-3 border-zinc-200 dark:border-zinc-700"
+                                {...register('address2')}
+                            />
+                        </div>
+
+                        <div className="sm:col-span-2">
+                            <label htmlFor="city" className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">City</label>
+                            <input
+                                type="text"
+                                id="city"
+                                className={`mt-1 block w-full rounded-md bg-zinc-50 dark:bg-black/50 text-text-primary shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-3 ${errors.city ? 'border-red-500' : 'border-zinc-200 dark:border-zinc-700'}`}
+                                {...register('city', { required: 'City is required' })}
+                            />
+                            {errors.city && <span className="text-xs text-red-500">{errors.city.message}</span>}
+                        </div>
+
+                        <div className="sm:col-span-2">
+                            <label htmlFor="state" className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">State</label>
+                            <input
+                                type="text"
+                                id="state"
+                                className={`mt-1 block w-full rounded-md bg-zinc-50 dark:bg-black/50 text-text-primary shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-3 ${errors.state ? 'border-red-500' : 'border-zinc-200 dark:border-zinc-700'}`}
+                                {...register('state', { required: 'State is required' })}
+                            />
+                            {errors.state && <span className="text-xs text-red-500">{errors.state.message}</span>}
+                        </div>
+
+                        <div className="sm:col-span-2">
+                            <label htmlFor="zip" className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">Zip / Postal Code</label>
+                            <input
+                                type="text"
+                                id="zip"
+                                className={`mt-1 block w-full rounded-md bg-zinc-50 dark:bg-black/50 text-text-primary shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-3 ${errors.zip ? 'border-red-500' : 'border-zinc-200 dark:border-zinc-700'}`}
+                                {...register('zip', { required: 'Zip code is required' })}
+                            />
+                            {errors.zip && <span className="text-xs text-red-500">{errors.zip.message}</span>}
+                        </div>
+
+                        {geocoding && <span className="text-xs text-indigo-500 sm:col-span-6 animate-pulse">Locating...</span>}
                     </div>
                 </div>
 

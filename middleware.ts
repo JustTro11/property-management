@@ -12,7 +12,16 @@ export async function middleware(request: NextRequest) {
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
-        // Allow public access if Supabase is not configured (e.g. CI/build)
+        // Fail protected routes if Supabase is not configured
+        const pathname = request.nextUrl.pathname;
+        const isAuthRoute = routing.locales.some(locale => pathname.startsWith(`/${locale}/admin`) || pathname === `/${locale}/admin`);
+
+        if (isAuthRoute) {
+            const locale = pathname.split('/')[1] || 'en';
+            const redirectUrl = new URL(`/${locale}/login`, request.url);
+            return NextResponse.redirect(redirectUrl);
+        }
+
         return response;
     }
 

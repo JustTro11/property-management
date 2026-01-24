@@ -1,6 +1,7 @@
 'use client'
 
 import { Link } from '@/lib/navigation'
+import FavoriteButton from '@/components/FavoriteButton'
 import { Bed, Bath, Maximize, MapPin } from 'lucide-react'
 import { useState } from 'react'
 import { Property } from '@/types'
@@ -40,6 +41,10 @@ export default function PropertyCard({ property }: { property: Property }) {
         {/* Status Badge */}
         <div className={`absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium border backdrop-blur-md z-10 ${statusColors[property.status]}`}>
           {t(`status.${property.status}`)}
+        </div>
+
+        <div className="absolute top-4 right-4 z-10">
+          <FavoriteButton propertyId={property.id} />
         </div>
       </div>
       <div className="p-5 flex-grow">

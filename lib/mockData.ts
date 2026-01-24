@@ -14,7 +14,9 @@ export const MOCK_PROPERTIES: Property[] = [
         status: 'available',
         description: "Experience the pulse of the city in this stunning modern loft. Featuring high ceilings, exposed brick, and floor-to-ceiling windows, this unit offers the perfect blend of industrial charm and contemporary luxury. The open-concept living area is perfect for entertaining, while the state-of-the-art kitchen will inspire your inner chef. Amenities include a rooftop terrace, fitness center, and 24/7 concierge service.",
         created_at: new Date().toISOString(),
-
+        lat: 34.052235,
+        lng: -118.243683,
+        amenities: ['Pool', 'Gym', 'Concierge', 'Rooftop'],
     },
     {
         id: '2',
@@ -29,7 +31,9 @@ export const MOCK_PROPERTIES: Property[] = [
         status: 'available',
         description: "Escape to your own private sanctuary in this secluded hilltop villa. Surrounded by lush greenery and offering panoramic views of the city, this property is the epitome of luxury living. Features include a gourmet kitchen, spacious master suite with private balcony, and a resort-style pool and spa. The perfect retreat for those seeking privacy and tranquility.",
         created_at: new Date().toISOString(),
-
+        lat: 34.073620,
+        lng: -118.400352,
+        amenities: ['Pool', 'Spa', 'Gourmet Kitchen', 'Parking'],
     },
     {
         id: '3',
@@ -44,7 +48,9 @@ export const MOCK_PROPERTIES: Property[] = [
         status: 'rented',
         description: "Live the dream in this breathtaking oceanfront glass home. With direct beach access and uninterrupted views of the Pacific Ocean, this property is truly one-of-a-kind. The modern design features floor-to-ceiling glass walls, an open floor plan, and high-end finishes throughout. Enjoy the sunset from your private deck or take a dip in the ocean just steps from your door.",
         created_at: new Date().toISOString(),
-
+        lat: 34.025922,
+        lng: -118.779757,
+        amenities: ['Beach Access', 'Deck', 'Parking', 'WiFi'],
     },
     {
         id: '4',
@@ -59,6 +65,8 @@ export const MOCK_PROPERTIES: Property[] = [
         status: 'maintenance',
         description: "Reconnect with nature in this charming eco-friendly forest cabin. Nestled among towering pines, this cabin offers a peaceful retreat from the hustle and bustle of city life. The sustainable design features solar panels, rainwater harvesting, and locally sourced materials. Inside, you'll find a cozy living area with a wood-burning stove, a fully equipped kitchen, and comfortable sleeping quarters.",
         created_at: new Date().toISOString(),
-
+        lat: 45.5152,
+        lng: -122.6784,
+        amenities: ['Solar Panels', 'Wood Stove', 'Garden', 'WiFi'],
     }
 ]

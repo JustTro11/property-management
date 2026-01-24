@@ -11,4 +11,7 @@ export interface Property {
     bedrooms: number;
     bathrooms: number;
     status: 'available' | 'rented' | 'maintenance';
+    lat: number;
+    lng: number;
+    amenities?: string[];
 }

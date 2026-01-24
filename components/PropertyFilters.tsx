@@ -21,6 +21,7 @@ export default function PropertyFilters() {
     const [maxPrice, setMaxPrice] = useState(searchParams.get('maxPrice') || '')
     const [beds, setBeds] = useState(searchParams.get('beds') || '')
     const [status, setStatus] = useState(searchParams.get('status') || '')
+    const [amenities, setAmenities] = useState<string[]>(searchParams.get('amenities')?.split(',').filter(Boolean) || [])
     const [isFiltersOpen, setIsFiltersOpen] = useState(false)
     const isMounted = useRef(false)
 
@@ -48,6 +49,9 @@ export default function PropertyFilters() {
         if (status) params.set('status', status)
         else params.delete('status')
 
+        if (amenities.length > 0) params.set('amenities', amenities.join(','))
+        else params.delete('amenities')
+
         // Reset page on filter change
         params.set('page', '1')
 
@@ -57,7 +61,7 @@ export default function PropertyFilters() {
         if (params.toString() !== searchParams.toString()) {
             router.push(newUrl)
         }
-    }, [debouncedSearch, minPrice, maxPrice, beds, status, pathname, router, searchParams]);
+    }, [debouncedSearch, minPrice, maxPrice, beds, status, amenities, pathname, router]);
 
     const clearFilters = () => {
         setSearchTerm('')
@@ -65,9 +69,10 @@ export default function PropertyFilters() {
         setMaxPrice('')
         setBeds('')
         setStatus('')
+        setAmenities([])
     }
 
-    const hasActiveFilters = searchTerm || minPrice || maxPrice || beds || status
+    const hasActiveFilters = searchTerm || minPrice || maxPrice || beds || status || amenities.length > 0
 
     const bedroomOptions = ['', '1', '2', '3', '4', '5']
     const statusOptions = [
@@ -176,6 +181,32 @@ export default function PropertyFilters() {
                                 ))}
                             </select>
                             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500 pointer-events-none" />
+                        </div>
+                    </div>
+
+                    {/* Amenities */}
+                    <div className="space-y-3">
+                        <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                            Amenities
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                            {['Pool', 'Gym', 'WiFi', 'Parking'].map(amenity => (
+                                <button
+                                    key={amenity}
+                                    onClick={() => {
+                                        const newAmenities = amenities.includes(amenity)
+                                            ? amenities.filter(a => a !== amenity)
+                                            : [...amenities, amenity]
+                                        setAmenities(newAmenities)
+                                    }}
+                                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${amenities.includes(amenity)
+                                        ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 ring-1 ring-indigo-500/50'
+                                        : 'bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-indigo-500/50'
+                                        }`}
+                                >
+                                    {amenity}
+                                </button>
+                            ))}
                         </div>
                     </div>
 

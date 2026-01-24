@@ -34,6 +34,8 @@ const mockProperty: Property = {
     bathrooms: 2,
     status: 'available',
     created_at: '2023-01-01',
+    lat: 34.052235,
+    lng: -118.243683,
 }
 
 describe('PropertyCard', () => {

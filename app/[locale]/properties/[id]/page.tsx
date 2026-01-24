@@ -1,4 +1,3 @@
-import { createClient } from '@/lib/supabaseServer'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowLeft, Bed, Bath, Maximize, MapPin, Share2 } from 'lucide-react'
@@ -7,43 +6,38 @@ import PropertyGallery from '@/components/PropertyGallery'
 import PropertyActions from '@/components/PropertyActions'
 import { Property } from '@/types'
 import { getTranslations } from 'next-intl/server'
+import ViewTracker from '@/components/ViewTracker'
+import RecentlyViewed from '@/components/RecentlyViewed'
 
-import { MOCK_PROPERTIES } from '@/lib/mockData'
+import { getPropertyById } from '@/lib/services/propertyService'
+import { Metadata } from 'next'
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+    const { id } = await params
+    const property = await getPropertyById(id)
+
+    if (!property) {
+        return {
+            title: 'Property Not Found',
+        }
+    }
+
+    return {
+        title: `${property.title} | Property Manager`,
+        description: property.description,
+        openGraph: {
+            title: property.title,
+            description: property.description,
+            images: property.images && property.images.length > 0 ? property.images : (property.image_url ? [property.image_url] : []),
+        },
+    }
+}
 
 export default async function PropertyDetails({ params }: { params: { id: string } }) {
     const { id } = await params
-    const supabase = await createClient()
     const t = await getTranslations('PropertyDetails')
 
-    let property: Property | null = null
-
-    // Fetch from Supabase
-    try {
-        const isSupabaseConfigured = !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
-            !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder') &&
-            process.env.NEXT_PUBLIC_FORCE_MOCK_DATA !== 'true';
-
-        if (isSupabaseConfigured) {
-            const { data, error } = await supabase
-                .from('properties')
-                .select('*')
-                .eq('id', id)
-                .single()
-
-            if (data) {
-                property = data
-            } else {
-                // Fallback for demo if DB is empty and ID matches mock
-                // property = MOCK_PROPERTIES.find(p => p.id === id) || null
-                property = (MOCK_PROPERTIES.find(p => p.id === id) as Property) || null
-            }
-        } else {
-            // Fallback for when Supabase is not configured (avoid DNS errors)
-            property = (MOCK_PROPERTIES.find(p => p.id === id) as Property) || null
-        }
-    } catch (e) {
-        property = (MOCK_PROPERTIES.find(p => p.id === id) as Property) || null
-    }
+    const property = await getPropertyById(id)
 
     if (!property) {
         return notFound()
@@ -116,6 +110,9 @@ export default async function PropertyDetails({ params }: { params: { id: string
                         </div>
                     </div>
                 </div>
+
+                <ViewTracker propertyId={property.id} />
+                <RecentlyViewed currentPropertyId={property.id} />
             </div>
         </main>
     )

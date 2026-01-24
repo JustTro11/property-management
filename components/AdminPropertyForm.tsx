@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import { useRouter } from '@/lib/navigation'
 import { Loader2 } from 'lucide-react'
 import { Property } from '@/types'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { useDebounce } from 'use-debounce'
 
 interface PropertyFormData extends Omit<Property, 'id' | 'created_at' | 'images'> {
     imagesStr: string
@@ -14,19 +15,24 @@ interface PropertyFormData extends Omit<Property, 'id' | 'created_at' | 'images'
 export default function AdminPropertyForm({ initialData }: { initialData?: Property }) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
+    const [geocoding, setGeocoding] = useState(false)
 
     const {
         register,
         handleSubmit,
         watch,
         setValue,
+        getValues,
         formState: { errors }
     } = useForm<PropertyFormData>({
         defaultValues: initialData ? {
             ...initialData,
             imagesStr: initialData.images && initialData.images.length > 0
                 ? initialData.images.join('\n')
-                : initialData.image_url || ''
+                : initialData.image_url || '',
+            lat: initialData.lat || 0,
+            lng: initialData.lng || 0,
+            amenities: initialData.amenities || []
         } : {
             title: '',
             price: 0,
@@ -37,7 +43,10 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
             bedrooms: 0,
             bathrooms: 0,
             status: 'available',
-            imagesStr: ''
+            imagesStr: '',
+            lat: 0,
+            lng: 0,
+            amenities: []
         }
     })
 
@@ -45,6 +54,69 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
     const imagesPreview = imagesStr
         ? imagesStr.split('\n').filter(url => url.trim() !== '')
         : []
+
+    const selectedAmenities = watch('amenities') || []
+
+    // Toggle amenity helper
+    const toggleAmenity = (amenity: string) => {
+        const current = getValues('amenities') || []
+        const updated = current.includes(amenity)
+            ? current.filter(a => a !== amenity)
+            : [...current, amenity]
+        setValue('amenities', updated)
+    }
+
+    const address = watch('address')
+    const [debouncedAddress] = useDebounce(address, 1000)
+
+    useEffect(() => {
+        register('amenities')
+    }, [register])
+
+    useEffect(() => {
+        const fetchCoordinates = async () => {
+            if (!debouncedAddress) return
+
+            // Avoid re-fetching if address matches initial (unless they changed it back, but good enough for now/optimization)
+            // But we do want to fetch if coordinates are 0/missing.
+            const currentLat = getValues('lat')
+            const currentLng = getValues('lng')
+            // Simple heuristic to avoid over-fetching on load if data exists
+            if (initialData?.address === debouncedAddress && currentLat !== 0 && currentLng !== 0) {
+                return;
+            }
+
+            setGeocoding(true)
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(debouncedAddress)}`)
+                const data = await response.json()
+
+                if (data && data.length > 0) {
+                    const { lat, lon, display_name } = data[0]
+                    setValue('lat', parseFloat(lat))
+                    setValue('lng', parseFloat(lon))
+
+                    // Standardize address if it's significantly different (to avoid loops, though debounce helps)
+                    if (display_name && display_name !== debouncedAddress) {
+                        setValue('address', display_name)
+                    }
+                } else {
+                    // Reset if not found, or maybe keep 0?
+                    // User said "account for cases where there are no coordinates found".
+                    // Explicitly setting to 0 or null might be better so we don't keep stale data if address changed to something invalid.
+                    setValue('lat', 0)
+                    setValue('lng', 0)
+                }
+            } catch (error) {
+                console.error('Geocoding error:', error)
+                // Optionally reset on error too
+            } finally {
+                setGeocoding(false)
+            }
+        }
+
+        fetchCoordinates()
+    }, [debouncedAddress, setValue, getValues, initialData])
 
     const onSubmit: SubmitHandler<PropertyFormData> = async (data) => {
         setLoading(true)
@@ -70,7 +142,10 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
                 sqft: Number(data.sqft),
                 bedrooms: Number(data.bedrooms),
                 bathrooms: Number(data.bathrooms),
-                status: data.status
+                status: data.status,
+                lat: Number(data.lat),
+                lng: Number(data.lng),
+                amenities: data.amenities
             }
 
             if (initialData?.id) {
@@ -250,6 +325,32 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
                         {errors.sqft && <span className="text-xs text-red-500">{errors.sqft.message}</span>}
                     </div>
                 </div>
+                <div className="sm:col-span-6">
+                    <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2">
+                        Amenities
+                    </label>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                        {['Pool', 'Gym', 'WiFi', 'Parking', 'Concierge', 'Rooftop', 'Spa', 'Garden', 'Beach Access'].map((amenity) => (
+                            <button
+                                key={amenity}
+                                type="button"
+                                onClick={() => toggleAmenity(amenity)}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${selectedAmenities.includes(amenity)
+                                    ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 ring-1 ring-indigo-500/50'
+                                    : 'bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-indigo-500/50'
+                                    }`}
+                            >
+                                {amenity}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="sm:col-span-6 border-t border-zinc-200 dark:border-zinc-800 pt-6 mt-2 hidden">
+                    <input type="hidden" {...register('lat', { valueAsNumber: true })} />
+                    <input type="hidden" {...register('lng', { valueAsNumber: true })} />
+                </div>
+
             </div>
 
             <div className="pt-5 border-t border-zinc-200 dark:border-zinc-800 flex justify-end gap-x-3">
@@ -268,6 +369,6 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
                     {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Save Property'}
                 </button>
             </div>
-        </form>
+        </form >
     )
 }

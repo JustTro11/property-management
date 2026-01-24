@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import ThemeProvider from "@/components/ThemeProvider";
 import "../globals.css";
+import { FavoritesProvider } from '@/components/FavoritesContext';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 
@@ -57,10 +58,12 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-bg-primary text-text-primary selection:bg-indigo-500 selection:text-white transition-colors duration-300`}
       >
         <ThemeProvider>
-          <NextIntlClientProvider messages={messages}>
-            <Navbar />
-            {children}
-          </NextIntlClientProvider>
+          <FavoritesProvider>
+            <NextIntlClientProvider messages={messages}>
+              <Navbar />
+              {children}
+            </NextIntlClientProvider>
+          </FavoritesProvider>
         </ThemeProvider>
       </body>
     </html>

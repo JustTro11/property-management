@@ -24,7 +24,7 @@ test.describe('Booking Flow', () => {
 
     test('validates required fields', async ({ page }) => {
         await page.waitForLoadState('domcontentloaded');
-        await page.getByRole('button', { name: /Book a Tour/i }).click();
+        await page.getByRole('button', { name: /Book a Tour/i }).first().click();
 
         // Submit empty form
         const submitButton = page.locator('button[type="submit"]');
@@ -44,7 +44,7 @@ test.describe('Booking Flow', () => {
             await route.fulfill({ json, status: 200 });
         });
 
-        await page.getByRole('button', { name: /Book a Tour/i }).click();
+        await page.getByRole('button', { name: /Book a Tour/i }).first().click();
 
         // Fill form
         await page.getByPlaceholder('John Doe').fill('Test User');

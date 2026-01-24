@@ -26,8 +26,32 @@ BEGIN
     END IF;
 END $$;
 
+-- Create Analytics Table
+CREATE TABLE IF NOT EXISTS analytics (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    property_id UUID REFERENCES properties(id) ON DELETE SET NULL,
+    event_type TEXT NOT NULL,
+    metadata JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE analytics ENABLE ROW LEVEL SECURITY;
+
+-- Add policies safely
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'analytics' AND policyname = 'Allow public insert to analytics') THEN
+        CREATE POLICY "Allow public insert to analytics" ON analytics FOR INSERT WITH CHECK (true);
+    END IF;
+    
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'analytics' AND policyname = 'Allow admin select analytics') THEN
+        CREATE POLICY "Allow admin select analytics" ON analytics FOR SELECT USING (true);
+    END IF;
+END $$;
+
 -- Clear existing data to avoid duplicates/conflicts
-TRUNCATE properties;
+TRUNCATE properties CASCADE;
 
 -- Insert Seed Data matching Mock Data but allowing DB to generate UUIDs
 -- Note: If you want strictly matching IDs for testing, you might need to insert them explicitly if the ID column allows it.

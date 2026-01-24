@@ -3,6 +3,8 @@ import { Link, redirect } from '@/lib/navigation'
 import { Plus, Pencil, Home } from 'lucide-react'
 import PropertyThumbnail from '@/components/PropertyThumbnail'
 import DeletePropertyButton from '@/components/DeletePropertyButton'
+import AdminAnalytics from '@/components/AdminAnalytics'
+import { getAnalyticsSummary } from '@/lib/services/analyticsService'
 
 export default async function AdminDashboard({
     params
@@ -22,6 +24,8 @@ export default async function AdminDashboard({
         .select('*')
         .order('created_at', { ascending: false })
 
+    const analyticsSummary = await getAnalyticsSummary()
+
     return (
         <div className="min-h-screen bg-bg-primary pt-20 pb-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
@@ -38,6 +42,8 @@ export default async function AdminDashboard({
                         Add Property
                     </Link>
                 </div>
+
+                <AdminAnalytics summary={analyticsSummary} />
 
                 <div className="bg-white dark:bg-zinc-900 overflow-hidden border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl">
                     <ul role="list" className="divide-y divide-zinc-200 dark:divide-zinc-800">

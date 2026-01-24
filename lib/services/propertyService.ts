@@ -71,7 +71,7 @@ export async function getProperties(filters: PropertyFilters = {}) {
     }
 
     // Mock Data Fallback
-    console.log('Using Mock Data')
+    // console.log('Using Mock Data')
     let filtered = MOCK_PROPERTIES as unknown as Property[]
 
     if (query) {

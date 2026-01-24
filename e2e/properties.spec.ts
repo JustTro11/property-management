@@ -27,11 +27,12 @@ test.describe('Property Filtering & Navigation', () => {
     test('search filters properties by title', async ({ page }) => {
         // Navigate directly with query param to test server-side filtering logic
         // Include page=1 to avoid client-side redirection race condition (PropertyFilters enforces page=1)
+        await page.waitForTimeout(500); // Wait for previous navigation/state to settle (Firefox fix)
         await page.goto('/en/properties?query=Oceanfront&page=1');
 
 
         // Expect "Oceanfront Glass Home" to be visible
-        await expect(page.getByText('Oceanfront Glass Home')).toBeVisible();
+        await expect(page.getByText('Oceanfront Glass Home').first()).toBeVisible();
 
         // Expect "Modern Downtown Loft" to be hidden
         const cards = page.locator('a[href*="/properties/"]');
@@ -46,7 +47,7 @@ test.describe('Property Filtering & Navigation', () => {
         await page.goto('/en/properties?status=rented&page=1');
 
         // Expect "Oceanfront Glass Home" (which is rented in mock data)
-        await expect(page.getByText('Oceanfront Glass Home')).toBeVisible();
+        await expect(page.getByText('Oceanfront Glass Home').first()).toBeVisible();
 
         // "Modern Downtown Loft" is available, so it should be gone
         await expect(page.getByText('Modern Downtown Loft')).toBeHidden();

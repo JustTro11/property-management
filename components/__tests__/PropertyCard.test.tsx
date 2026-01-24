@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import PropertyCard from '@/components/PropertyCard'
+import { FavoritesProvider } from '@/components/FavoritesContext'
 import { Property } from '@/types'
 
 // Mock next-intl
@@ -40,7 +41,11 @@ const mockProperty: Property = {
 
 describe('PropertyCard', () => {
     it('renders property details correctly', () => {
-        render(<PropertyCard property={mockProperty} />)
+        render(
+            <FavoritesProvider>
+                <PropertyCard property={mockProperty} />
+            </FavoritesProvider>
+        )
 
         expect(screen.getByText('Test Villa')).toBeInTheDocument()
         expect(screen.getByText('$5,000')).toBeInTheDocument()
@@ -51,13 +56,32 @@ describe('PropertyCard', () => {
     })
 
     it('renders correct status badge', () => {
-        render(<PropertyCard property={mockProperty} />)
+        render(
+            <FavoritesProvider>
+                <PropertyCard property={mockProperty} />
+            </FavoritesProvider>
+        )
         expect(screen.getByText('status.available')).toBeInTheDocument()
+    })
+
+    it('displays correct status badge', () => {
+        const rentedProperty = { ...mockProperty, status: 'rented' as const }
+        render(
+            <FavoritesProvider>
+                <PropertyCard property={rentedProperty} />
+            </FavoritesProvider>
+        )
+
+        expect(screen.getByText('status.rented')).toBeInTheDocument()
     })
 
     it('renders maintenance status correctly', () => {
         const maintenanceProperty = { ...mockProperty, status: 'maintenance' as const }
-        render(<PropertyCard property={maintenanceProperty} />)
+        render(
+            <FavoritesProvider>
+                <PropertyCard property={maintenanceProperty} />
+            </FavoritesProvider>
+        )
         expect(screen.getByText('status.maintenance')).toBeInTheDocument()
     })
 
@@ -67,7 +91,11 @@ describe('PropertyCard', () => {
             images: [],
             image_url: 'https://example.com/single-image.jpg'
         }
-        render(<PropertyCard property={propertyWithoutImages} />)
+        render(
+            <FavoritesProvider>
+                <PropertyCard property={propertyWithoutImages} />
+            </FavoritesProvider>
+        )
         const img = screen.getByAltText('Test Villa')
         // Next.js Image component modifies src, so we check if it contains the url
         expect(img.getAttribute('src')).toContain('single-image.jpg')
@@ -79,7 +107,11 @@ describe('PropertyCard', () => {
             images: [],
             image_url: null
         } as unknown as Property
-        render(<PropertyCard property={propertyNoImages} />)
+        render(
+            <FavoritesProvider>
+                <PropertyCard property={propertyNoImages} />
+            </FavoritesProvider>
+        )
         const img = screen.getByAltText('Test Villa')
         // Check for the fallback URL used in component
         expect(img.getAttribute('src')).toContain('photo-1560518883')
@@ -87,7 +119,11 @@ describe('PropertyCard', () => {
 
     it('switches to fallback image on error', () => {
         // Use a property that has a primary image
-        render(<PropertyCard property={mockProperty} />)
+        render(
+            <FavoritesProvider>
+                <PropertyCard property={mockProperty} />
+            </FavoritesProvider>
+        )
         const img = screen.getByAltText('Test Villa')
 
         // Simulate error on the main image

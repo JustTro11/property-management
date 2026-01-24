@@ -6,12 +6,13 @@ import BookTourModal from './BookTourModal'
 import { useTranslations } from 'next-intl'
 
 interface PropertyActionsProps {
+    propertyId: string
     title: string
     price: number
     isAvailable: boolean
 }
 
-export default function PropertyActions({ title, price, isAvailable }: PropertyActionsProps) {
+export default function PropertyActions({ propertyId, title, price, isAvailable }: PropertyActionsProps) {
     const t = useTranslations('PropertyDetails')
     const [isTourModalOpen, setIsTourModalOpen] = useState(false)
     const [showCopiedToast, setShowCopiedToast] = useState(false)
@@ -58,6 +59,7 @@ export default function PropertyActions({ title, price, isAvailable }: PropertyA
                 isOpen={isTourModalOpen}
                 onClose={() => setIsTourModalOpen(false)}
                 propertyTitle={title}
+                propertyId={propertyId}
             />
         </>
     )

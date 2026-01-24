@@ -8,6 +8,8 @@ import { Property } from '@/types'
 import { getTranslations } from 'next-intl/server'
 import ViewTracker from '@/components/ViewTracker'
 import RecentlyViewed from '@/components/RecentlyViewed'
+import AnalyticsTracker from '@/components/AnalyticsTracker'
+import FavoriteButton from '@/components/FavoriteButton'
 
 import { getPropertyById } from '@/lib/services/propertyService'
 import { Metadata } from 'next'
@@ -64,7 +66,10 @@ export default async function PropertyDetails({ params }: { params: { id: string
                     {/* Info Section */}
                     <div className="flex flex-col h-full">
                         <div className="mb-6">
-                            <h1 className="text-3xl sm:text-4xl font-bold text-text-primary mb-2">{property.title}</h1>
+                            <div className="flex justify-between items-start gap-4">
+                                <h1 className="text-3xl sm:text-4xl font-bold text-text-primary mb-2">{property.title}</h1>
+                                <FavoriteButton propertyId={property.id} />
+                            </div>
                             <div className="flex items-center text-zinc-500 dark:text-zinc-400">
                                 <MapPin className="w-4 h-4 mr-2 text-indigo-500" />
                                 {property.address}
@@ -106,13 +111,14 @@ export default async function PropertyDetails({ params }: { params: { id: string
                                     <span className="text-lg text-zinc-400 dark:text-zinc-500 font-normal ml-1">{t('perMonth')}</span>
                                 </p>
                             </div>
-                            <PropertyActions title={property.title} price={property.price} isAvailable={property.status === 'available'} />
+                            <PropertyActions propertyId={property.id} title={property.title} price={property.price} isAvailable={property.status === 'available'} />
                         </div>
                     </div>
                 </div>
 
                 <ViewTracker propertyId={property.id} />
                 <RecentlyViewed currentPropertyId={property.id} />
+                <AnalyticsTracker propertyId={property.id} />
             </div>
         </main>
     )

@@ -9,6 +9,7 @@ interface BookTourModalProps {
     isOpen: boolean
     onClose: () => void
     propertyTitle: string
+    propertyId: string
 }
 
 interface TourRequestFormInputs {
@@ -18,7 +19,7 @@ interface TourRequestFormInputs {
     date: string
 }
 
-export default function BookTourModal({ isOpen, onClose, propertyTitle }: BookTourModalProps) {
+export default function BookTourModal({ isOpen, onClose, propertyTitle, propertyId }: BookTourModalProps) {
     const t = useTranslations('BookTour')
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
@@ -50,6 +51,17 @@ export default function BookTourModal({ isOpen, onClose, propertyTitle }: BookTo
             if (!response.ok) {
                 throw new Error('Failed to send email')
             }
+
+            // Track inquiry
+            fetch('/api/analytics/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    property_id: propertyId,
+                    event_type: 'inquiry',
+                    metadata: { source: 'book_tour_modal' }
+                })
+            }).catch(e => console.error('Failed to track inquiry', e))
 
             setIsSubmitting(false)
             setIsSuccess(true)
@@ -109,8 +121,9 @@ export default function BookTourModal({ isOpen, onClose, propertyTitle }: BookTo
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <label className="text-xs font-medium text-text-muted dark:text-zinc-500 uppercase">{t('fields.name')}</label>
+                                    <label htmlFor="name" className="text-xs font-medium text-text-muted dark:text-zinc-500 uppercase">{t('fields.name')}</label>
                                     <input
+                                        id="name"
                                         type="text"
                                         placeholder="John Doe"
                                         className={`w-full bg-bg-input dark:bg-black/50 border rounded-lg px-4 py-3 text-text-primary dark:text-white focus:outline-none transition-colors ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-border-color dark:border-zinc-800 focus:border-indigo-500'}`}
@@ -119,8 +132,9 @@ export default function BookTourModal({ isOpen, onClose, propertyTitle }: BookTo
                                     {errors.name && <span className="text-xs text-red-500">{errors.name.message}</span>}
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-xs font-medium text-text-muted dark:text-zinc-500 uppercase">{t('fields.phone')}</label>
+                                    <label htmlFor="phone" className="text-xs font-medium text-text-muted dark:text-zinc-500 uppercase">{t('fields.phone')}</label>
                                     <input
+                                        id="phone"
                                         type="tel"
                                         placeholder="(555) 000-0000"
                                         className={`w-full bg-bg-input dark:bg-black/50 border rounded-lg px-4 py-3 text-text-primary dark:text-white focus:outline-none transition-colors ${errors.phone ? 'border-red-500 focus:border-red-500' : 'border-border-color dark:border-zinc-800 focus:border-indigo-500'}`}
@@ -137,8 +151,9 @@ export default function BookTourModal({ isOpen, onClose, propertyTitle }: BookTo
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-medium text-text-muted dark:text-zinc-500 uppercase">{t('fields.email')}</label>
+                                <label htmlFor="email" className="text-xs font-medium text-text-muted dark:text-zinc-500 uppercase">{t('fields.email')}</label>
                                 <input
+                                    id="email"
                                     type="email"
                                     placeholder="john@example.com"
                                     className={`w-full bg-bg-input dark:bg-black/50 border rounded-lg px-4 py-3 text-text-primary dark:text-white focus:outline-none transition-colors ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-border-color dark:border-zinc-800 focus:border-indigo-500'}`}
@@ -154,9 +169,10 @@ export default function BookTourModal({ isOpen, onClose, propertyTitle }: BookTo
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-xs font-medium text-text-muted dark:text-zinc-500 uppercase">{t('fields.date')}</label>
+                                <label htmlFor="date" className="text-xs font-medium text-text-muted dark:text-zinc-500 uppercase">{t('fields.date')}</label>
                                 <div className="relative">
                                     <input
+                                        id="date"
                                         type="date"
                                         className={`w-full bg-bg-input dark:bg-black/50 border rounded-lg px-4 py-3 text-text-primary dark:text-white focus:outline-none transition-colors dark:[&::-webkit-calendar-picker-indicator]:invert ${errors.date ? 'border-red-500 focus:border-red-500' : 'border-border-color dark:border-zinc-800 focus:border-indigo-500'}`}
                                         {...register('date', {

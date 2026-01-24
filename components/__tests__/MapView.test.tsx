@@ -2,6 +2,21 @@ import { render, screen } from '@testing-library/react'
 import MapView from '../MapView'
 import { MOCK_PROPERTIES } from '@/lib/mockData'
 
+// Mock Next Intl
+jest.mock('next-intl', () => ({
+    useTranslations: () => (key: string) => {
+        const messages: Record<string, string> = {
+            loading: 'Loading Map...',
+            viewDetails: 'View Details',
+            perMonth: '/mo'
+        }
+        return messages[key] || key
+    }
+}))
+
+// Mock Leaflet css
+jest.mock('leaflet/dist/leaflet.css', () => { })
+
 // Mock Leaflet components since they rely on browser APIs not fully present in JSDOM
 jest.mock('react-leaflet', () => ({
     MapContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="map-container">{children}</div>,

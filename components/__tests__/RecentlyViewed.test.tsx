@@ -3,6 +3,17 @@ import RecentlyViewed from '../RecentlyViewed'
 import { supabase } from '@/lib/supabaseClient'
 import { act } from 'react'
 
+// Mock Next Intl
+jest.mock('next-intl', () => ({
+    useTranslations: () => (key: string) => {
+        const messages: Record<string, string> = {
+            title: 'Recently Viewed',
+            perMonth: '/mo'
+        }
+        return messages[key] || key
+    }
+}))
+
 // Mock Supabase
 const mockFrom = jest.fn()
 const mockSelect = jest.fn()

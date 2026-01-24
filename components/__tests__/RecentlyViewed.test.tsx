@@ -14,26 +14,8 @@ jest.mock('next-intl', () => ({
     }
 }))
 
-// Mock Supabase
-const mockFrom = jest.fn()
-const mockSelect = jest.fn()
-const mockIn = jest.fn()
-
-jest.mock('@/lib/supabaseClient', () => ({
-    supabase: {
-        from: (...args: any[]) => {
-            mockFrom(...args)
-            return {
-                select: (...args: any[]) => {
-                    mockSelect(...args)
-                    return {
-                        in: mockIn
-                    }
-                }
-            }
-        }
-    }
-}))
+// Mock global fetch
+global.fetch = jest.fn() as jest.Mock
 
 // Mock LocalStorage (unchanged)
 const localStorageMock = (function () {
@@ -57,15 +39,12 @@ describe('RecentlyViewed', () => {
     beforeEach(() => {
         jest.clearAllMocks()
         localStorageMock.clear()
-        mockFrom.mockClear()
-        mockSelect.mockClear()
-        mockIn.mockClear()
 
-        // Default mock implementation for success
-        mockIn.mockResolvedValue({
-            data: [],
-            error: null
-        })
+            // Default mock implementation for fetch success (empty list)
+            ; (global.fetch as jest.Mock).mockResolvedValue({
+                ok: true,
+                json: async () => []
+            })
     })
 
     it('renders nothing if no recently viewed items', async () => {
@@ -80,7 +59,7 @@ describe('RecentlyViewed', () => {
     it('fetches and displays valid recent properties', async () => {
         const mockProperties = [
             {
-                id: '12345678-1234-1234-1234-1234567890ab',
+                id: 'p1',
                 title: 'Test Property',
                 price: 500000,
                 image_url: 'http://test.com/image.jpg',
@@ -89,14 +68,14 @@ describe('RecentlyViewed', () => {
             }
         ]
 
-        // Setup local storage with valid UUID
-        localStorageMock.setItem('recently_viewed', JSON.stringify(['12345678-1234-1234-1234-1234567890ab']))
+        // Setup local storage (simple IDs are fine now)
+        localStorageMock.setItem('recently_viewed', JSON.stringify(['p1']))
 
-        // Setup Supabase response
-        mockIn.mockResolvedValue({
-            data: mockProperties,
-            error: null
-        })
+            // Setup fetch response
+            ; (global.fetch as jest.Mock).mockResolvedValue({
+                ok: true,
+                json: async () => mockProperties
+            })
 
         await act(async () => {
             render(<RecentlyViewed currentPropertyId="other-id" />)
@@ -107,12 +86,14 @@ describe('RecentlyViewed', () => {
             expect(screen.getByText('Test Property')).toBeInTheDocument()
         })
 
-        expect(mockFrom).toHaveBeenCalledWith('properties')
-        expect(mockIn).toHaveBeenCalledWith('id', ['12345678-1234-1234-1234-1234567890ab'])
+        expect(global.fetch).toHaveBeenCalledWith('/api/properties/batch', expect.objectContaining({
+            method: 'POST',
+            body: JSON.stringify({ ids: ['p1'] })
+        }))
     })
 
     it('filters out current property from view', async () => {
-        const currentId = '12345678-1234-1234-1234-1234567890ab'
+        const currentId = 'p1'
         localStorageMock.setItem('recently_viewed', JSON.stringify([currentId]))
 
         await act(async () => {
@@ -124,22 +105,25 @@ describe('RecentlyViewed', () => {
             expect(heading).not.toBeInTheDocument()
         })
 
-        // Should NOT call supabase if filtered list is empty
-        expect(mockFrom).not.toHaveBeenCalled()
+        // Should NOT call fetch if filtered list is empty
+        expect(global.fetch).not.toHaveBeenCalled()
     })
 
-    it('ignores invalid IDs in local storage', async () => {
+    it('sends all other IDs to API', async () => {
         localStorageMock.setItem('recently_viewed', JSON.stringify(['invalid-id', '123']))
 
-        // We can just render, no act needed if we just wait
+            // Mock empty response implies API handled it (by returning nothing found)
+            ; (global.fetch as jest.Mock).mockResolvedValue({
+                ok: true,
+                json: async () => [] // API returns empty list for unknown IDs
+            })
+
         render(<RecentlyViewed currentPropertyId="other-id" />)
 
         await waitFor(() => {
-            const heading = screen.queryByText('Recently Viewed')
-            expect(heading).not.toBeInTheDocument()
+            expect(global.fetch).toHaveBeenCalledWith('/api/properties/batch', expect.objectContaining({
+                body: JSON.stringify({ ids: ['invalid-id', '123'] })
+            }))
         })
-
-        // Should not verify against DB
-        expect(mockFrom).not.toHaveBeenCalled()
     })
 })

@@ -17,13 +17,13 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
 
     // Load from localStorage on mount
     useEffect(() => {
-        const stored = localStorage.getItem('property_favorites')
-        if (stored) {
-            try {
+        try {
+            const stored = localStorage.getItem('property_favorites')
+            if (stored) {
                 setFavorites(JSON.parse(stored))
-            } catch (e) {
-                console.error('Failed to parse favorites', e)
             }
+        } catch (e) {
+            console.error('Failed to load favorites', e)
         }
         setIsLoaded(true)
     }, [])

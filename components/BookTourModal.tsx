@@ -74,7 +74,7 @@ export default function BookTourModal({ isOpen, onClose, propertyTitle, property
             }, 3000)
         } catch (error) {
             console.error('Error sending tour request:', error)
-            alert('Failed to send request. Please try again.')
+            // alert('Failed to send request. Please try again.')
             setIsSubmitting(false)
         }
     }

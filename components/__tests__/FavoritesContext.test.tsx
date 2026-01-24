@@ -103,7 +103,7 @@ describe('FavoritesContext', () => {
         const { result } = renderHook(() => useFavoritesContext(), { wrapper })
 
         expect(result.current.favorites).toEqual([])
-        expect(consoleSpy).toHaveBeenCalledWith('Failed to load favorites:', expect.anything())
+        expect(consoleSpy).toHaveBeenCalledWith('Failed to load favorites', expect.anything())
 
         consoleSpy.mockRestore()
     })
@@ -113,7 +113,7 @@ describe('FavoritesContext', () => {
 
         expect(() => {
             renderHook(() => useFavoritesContext())
-        }).toThrow('useFavorites must be used within a FavoritesProvider')
+        }).toThrow('useFavoritesContext must be used within a FavoritesProvider')
 
         consoleSpy.mockRestore()
     })

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { Property } from '@/types'
-import { supabase } from '@/lib/supabaseClient'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -24,13 +23,8 @@ export default function RecentlyViewed({ currentPropertyId }: { currentPropertyI
             try {
                 const ids: string[] = JSON.parse(stored)
 
-                // Filter out current property AND invalid UUIDs (legacy mock data had simple IDs like "1")
-                // Simple UUID regex: 8-4-4-4-12 hex digits
-                const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-
-                const filteredIds = ids.filter(id =>
-                    id !== currentPropertyId && uuidRegex.test(id)
-                )
+                // Filter out current property
+                const filteredIds = ids.filter(id => id !== currentPropertyId)
 
                 if (filteredIds.length === 0) {
                     setRecentProperties([])
@@ -38,17 +32,19 @@ export default function RecentlyViewed({ currentPropertyId }: { currentPropertyI
                     return
                 }
 
-                // Fetch real data from Supabase
-                const { data, error } = await supabase
-                    .from('properties')
-                    .select('*')
-                    .in('id', filteredIds)
+                // Fetch data via API to avoid Server Component imports in Client Component
+                const response = await fetch('/api/properties/batch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids: filteredIds })
+                })
 
-                if (error) throw error
+                if (!response.ok) throw new Error('Failed to fetch properties')
+                const data: Property[] = await response.json()
 
                 // Order matters: match the order of IDs in localStorage
                 const orderedData = filteredIds
-                    .map(id => data?.find((p: Property) => p.id === id))
+                    .map(id => data.find((p: Property) => p.id === id))
                     .filter((p): p is Property => !!p)
 
                 setRecentProperties(orderedData)

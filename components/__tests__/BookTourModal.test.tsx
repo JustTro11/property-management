@@ -118,26 +118,34 @@ describe('BookTourModal', () => {
         const user = userEvent.setup()
         renderModal()
 
-        // Fill form
+        // Fill form using userEvent
         await user.type(screen.getByPlaceholderText('John Doe'), 'Bob Error')
         await user.type(screen.getByPlaceholderText('john@example.com'), 'bob@example.com')
         await user.type(screen.getByPlaceholderText('(555) 000-0000'), '555-0123')
 
+        // Select Date
         const tomorrow = new Date()
         tomorrow.setDate(tomorrow.getDate() + 1)
         const dateStr = tomorrow.toISOString().split('T')[0]
 
-        // Input has no placeholder for date, rely on selector if possible or ByLabelText
-        // Since my previous test used fireEvent on LabelText and it might be fragile due to CSS uppercase
-        // I'll try getting by type date
-        // fireEvent.change(container.querySelector('input[type="date"]'), ...)
-        // Let's assume the previous test might fail on label lookup, so I'll be more robust here.
-        const dateInput = screen.getAllByDisplayValue('')[0] // Risky. 
-        // Better:
-        const inputs = screen.getAllByRole('textbox') // Date is not textbox usually?
-        // Let's use valid selector logic:
-        // The input has type="date"
-        // Testing Library doesn't easily select date inputs by role.
-        // I will use container query for this test to be safe.
+        // Find input by label text (using regex for case insensitivity)
+        // or by placeholder if it had one, or role 'combobox' if it was custom.
+        // Standard input[type=date] doesn't always have a role.
+        // We can use container query or getByLabelText since we know the label "Preferred Date".
+        const dateInput = screen.getByLabelText(/preferred date/i)
+        fireEvent.change(dateInput, { target: { value: dateStr } })
+
+        const submitBtn = screen.getByRole('button', { name: /schedule tour/i })
+        await user.click(submitBtn)
+
+        await waitFor(() => {
+            expect(global.fetch).toHaveBeenCalledWith('/api/send-email', expect.anything())
+        })
+
+        // Should NOT track inquiry
+        expect(global.fetch).not.toHaveBeenCalledWith('/api/analytics/track', expect.anything())
+
+        // Should NOT show success message
+        expect(screen.queryByText('Request Sent!')).not.toBeInTheDocument()
     })
 })

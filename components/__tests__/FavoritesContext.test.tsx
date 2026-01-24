@@ -92,4 +92,29 @@ describe('FavoritesContext', () => {
         // Only one tracking call (for the first add)
         expect(global.fetch).toHaveBeenCalledTimes(1)
     })
+
+    it('handles localStorage errors gracefully', () => {
+        const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
+            // Mock getItem to throw
+            ; (localStorageMock.getItem as jest.Mock).mockImplementationOnce(() => {
+                throw new Error('Access denied')
+            })
+
+        const { result } = renderHook(() => useFavoritesContext(), { wrapper })
+
+        expect(result.current.favorites).toEqual([])
+        expect(consoleSpy).toHaveBeenCalledWith('Failed to load favorites:', expect.anything())
+
+        consoleSpy.mockRestore()
+    })
+
+    it('throws error when used outside provider', () => {
+        const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
+
+        expect(() => {
+            renderHook(() => useFavoritesContext())
+        }).toThrow('useFavorites must be used within a FavoritesProvider')
+
+        consoleSpy.mockRestore()
+    })
 })

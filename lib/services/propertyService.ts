@@ -116,3 +116,30 @@ export async function getPropertyById(id: string): Promise<Property | null> {
     // Mock Fallback
     return (MOCK_PROPERTIES.find(p => p.id === id) as Property) || null
 }
+
+export async function getPropertiesByIds(ids: string[]): Promise<Property[]> {
+    if (ids.length === 0) return []
+
+    if (isSupabaseConfigured()) {
+        const supabase = await createClient()
+        try {
+            const { data, error } = await supabase
+                .from('properties')
+                .select('*')
+                .in('id', ids)
+
+            if (data) {
+                // Maintain order based on input 'ids' array if possible, or client sorts.
+                // SQL 'IN' does not guarantee order.
+                // We'll return data and let caller sort if needed, or sort here.
+                // Caller (RecentlyViewed) sorts it.
+                return data as Property[]
+            }
+        } catch (e) {
+            console.error('Error fetching properties by IDs from Supabase:', e)
+        }
+    }
+
+    // Mock Fallback
+    return MOCK_PROPERTIES.filter(p => ids.includes(p.id)) as unknown as Property[]
+}

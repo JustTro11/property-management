@@ -12,7 +12,9 @@
     "PropertiesPage": {
         "title": "Our Exclusive",
         "highlight": "Collection",
-        "subtitle": "Browse our hand-picked selection of premium properties."
+        "subtitle": "Browse our hand-picked selection of premium properties.",
+        "listView": "List View",
+        "mapView": "Map View"
     },
     "AboutPage": {
         "title": "About",
@@ -108,11 +110,32 @@
         "bedsPlus": "{count}+ Beds",
         "status": "Status",
         "anyStatus": "Any Status",
-        "clear": "Clear Filters"
+        "clear": "Clear Filters",
+        "amenitiesLabel": "Amenities"
     },
     "Pagination": {
         "previous": "Previous",
         "next": "Next",
         "showing": "Showing {start}-{end} of {total} properties"
+    },
+    "RecentlyViewed": {
+        "title": "Recently Viewed",
+        "perMonth": "/mo"
+    },
+    "Amenities": {
+        "Pool": "Pool",
+        "Gym": "Gym",
+        "WiFi": "WiFi",
+        "Parking": "Parking",
+        "Concierge": "Concierge",
+        "Rooftop": "Rooftop",
+        "Spa": "Spa",
+        "Garden": "Garden",
+        "Beach Access": "Beach Access"
+    },
+    "Map": {
+        "loading": "Loading Map...",
+        "viewDetails": "View Details",
+        "perMonth": "/mo"
     }
 }

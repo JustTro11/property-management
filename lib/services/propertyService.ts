@@ -28,7 +28,7 @@ export async function getProperties(filters: PropertyFilters = {}) {
         status,
         amenities,
         page = 1,
-        limit = 6
+        limit = 12
     } = filters
 
     const startRange = (page - 1) * limit

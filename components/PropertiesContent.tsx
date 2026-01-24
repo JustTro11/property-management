@@ -5,17 +5,22 @@ import dynamic from 'next/dynamic'
 import PropertyCard from '@/components/PropertyCard'
 import { Property } from '@/types'
 
+import MapLoading from '@/components/MapLoading'
+
 // Dynamically import MapView to avoid SSR issues with Leaflet
 const MapView = dynamic(() => import('@/components/MapView'), {
     ssr: false,
-    loading: () => <div className="h-[500px] w-full bg-gray-100 animate-pulse rounded-xl flex items-center justify-center">Loading Map...</div>
+    loading: () => <MapLoading />
 })
 
 interface PropertiesContentProps {
     properties: Property[];
 }
 
+import { useTranslations } from 'next-intl'
+
 export default function PropertiesContent({ properties }: PropertiesContentProps) {
+    const t = useTranslations('PropertiesPage')
     const [viewMode, setViewMode] = useState<'list' | 'map'>('list')
 
     if (properties.length === 0) {
@@ -35,21 +40,21 @@ export default function PropertiesContent({ properties }: PropertiesContentProps
                         type="button"
                         onClick={() => setViewMode('list')}
                         className={`px-4 py-2 text-sm font-medium border border-gray-200 rounded-l-lg hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-700 ${viewMode === 'list'
-                                ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-200'
-                                : 'bg-white text-gray-900 dark:bg-gray-800 dark:text-white'
+                            ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-200'
+                            : 'bg-white text-gray-900 dark:bg-gray-800 dark:text-white'
                             }`}
                     >
-                        List View
+                        {t('listView')}
                     </button>
                     <button
                         type="button"
                         onClick={() => setViewMode('map')}
                         className={`px-4 py-2 text-sm font-medium border border-gray-200 rounded-r-lg hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-700 ${viewMode === 'map'
-                                ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-200'
-                                : 'bg-white text-gray-900 dark:bg-gray-800 dark:text-white'
+                            ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-200'
+                            : 'bg-white text-gray-900 dark:bg-gray-800 dark:text-white'
                             }`}
                     >
-                        Map View
+                        {t('mapView')}
                     </button>
                 </div>
             </div>

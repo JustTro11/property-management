@@ -6,10 +6,12 @@ import { useSearchParams } from 'next/navigation'
 import { Search, SlidersHorizontal, X, ChevronDown, DollarSign } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import { useDebounce } from 'use-debounce'
+import { AMENITIES } from '@/lib/constants'
 
 export default function PropertyFilters() {
     const t = useTranslations('PropertyFilters')
     const tStatus = useTranslations('PropertyDetails.status')
+    const tAmenities = useTranslations('Amenities')
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
@@ -187,10 +189,10 @@ export default function PropertyFilters() {
                     {/* Amenities */}
                     <div className="space-y-3">
                         <label className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-                            Amenities
+                            {t('amenitiesLabel')}
                         </label>
                         <div className="flex flex-wrap gap-2">
-                            {['Pool', 'Gym', 'WiFi', 'Parking'].map(amenity => (
+                            {AMENITIES.map(amenity => (
                                 <button
                                     key={amenity}
                                     onClick={() => {
@@ -204,7 +206,7 @@ export default function PropertyFilters() {
                                         : 'bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 hover:border-indigo-500/50'
                                         }`}
                                 >
-                                    {amenity}
+                                    {tAmenities(amenity as any)}
                                 </button>
                             ))}
                         </div>

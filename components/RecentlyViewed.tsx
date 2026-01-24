@@ -6,7 +6,10 @@ import { supabase } from '@/lib/supabaseClient'
 import Link from 'next/link'
 import Image from 'next/image'
 
+import { useTranslations } from 'next-intl'
+
 export default function RecentlyViewed({ currentPropertyId }: { currentPropertyId: string }) {
+    const t = useTranslations('RecentlyViewed')
     const [recentProperties, setRecentProperties] = useState<Property[]>([])
     const [isLoaded, setIsLoaded] = useState(false)
 
@@ -63,7 +66,7 @@ export default function RecentlyViewed({ currentPropertyId }: { currentPropertyI
 
     return (
         <div className="mt-16 border-t border-zinc-200 dark:border-zinc-800 pt-10">
-            <h3 className="text-2xl font-bold text-text-primary dark:text-white mb-6">Recently Viewed</h3>
+            <h3 className="text-2xl font-bold text-text-primary dark:text-white mb-6">{t('title')}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {recentProperties.map(property => (
                     <Link
@@ -85,7 +88,7 @@ export default function RecentlyViewed({ currentPropertyId }: { currentPropertyI
                             </h4>
                             <p className="text-indigo-600 dark:text-indigo-400 font-bold mt-1">
                                 ${property.price.toLocaleString()}
-                                <span className="text-xs text-zinc-500 font-normal ml-1">/mo</span>
+                                <span className="text-xs text-zinc-500 font-normal ml-1">{t('perMonth')}</span>
                             </p>
                         </div>
                     </Link>

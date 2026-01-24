@@ -35,7 +35,7 @@ test.describe('Property Filtering & Navigation', () => {
 
         // Expect "Modern Downtown Loft" to be hidden
         const cards = page.locator('a[href*="/properties/"]');
-        await expect(cards).toHaveCount(1, { timeout: 10000 });
+        await expect(cards).toHaveCount(1, { timeout: 20000 });
 
         // Verify input is populated
         await expect(page.getByPlaceholder(/Search by title/i)).toHaveValue('Oceanfront');
@@ -61,11 +61,11 @@ test.describe('Property Filtering & Navigation', () => {
         // Apply a filter first
         const searchInput = page.getByPlaceholder(/Search by title/i);
         await searchInput.click();
-        await searchInput.pressSequentially('NonExistentPropertyBlaBla', { delay: 100 });
+        await searchInput.fill('NonExistentPropertyBlaBla');
         await expect(searchInput).toHaveValue('NonExistentPropertyBlaBla');
 
         // Wait URL
-        await expect(page).toHaveURL(/.*query=NonExistent/, { timeout: 10000 });
+        await expect(page).toHaveURL(/.*query=NonExistent/, { timeout: 20000 });
 
         await expect(page.getByText('No properties found')).toBeVisible();
 

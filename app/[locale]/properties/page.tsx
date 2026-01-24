@@ -26,7 +26,7 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
     const amenities = amenitiesParam ? amenitiesParam.split(',') : []
     const page = typeof resolvedSearchParams.page === 'string' ? parseInt(resolvedSearchParams.page) : 1
 
-    const itemsPerPage = 6
+    const itemsPerPage = 12
     const startRange = (page - 1) * itemsPerPage
     const endRange = startRange + itemsPerPage - 1
 

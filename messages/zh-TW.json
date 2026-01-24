@@ -12,7 +12,9 @@
     "PropertiesPage": {
         "title": "我們的獨家",
         "highlight": "精選系列",
-        "subtitle": "瀏覽我們精心挑選的高級房產。"
+        "subtitle": "瀏覽我們精心挑選的高級房產。",
+        "listView": "列表視圖",
+        "mapView": "地圖視圖"
     },
     "AboutPage": {
         "title": "關於",
@@ -99,20 +101,41 @@
         "submit": "請求參觀"
     },
     "PropertyFilters": {
-        "searchPlaceholder": "按標題或地址搜尋...",
+        "searchPlaceholder": "按標題或地址搜索...",
         "priceRange": "價格範圍",
-        "minPrice": "最低價格",
-        "maxPrice": "最高價格",
+        "minPrice": "最低價",
+        "maxPrice": "最高價",
         "bedrooms": "臥室",
-        "anyBeds": "不限臥室",
-        "bedsPlus": "{count}+ 臥室",
+        "anyBeds": "任意",
+        "bedsPlus": "{count}+ 臥",
         "status": "狀態",
-        "anyStatus": "不限狀態",
-        "clear": "清除篩選"
+        "anyStatus": "任意狀態",
+        "clear": "清除篩選",
+        "amenitiesLabel": "設施"
     },
     "Pagination": {
         "previous": "上一頁",
         "next": "下一頁",
-        "showing": "顯示 {start}-{end} 共 {total} 處房產"
+        "showing": "顯示 {start}-{end} 共 {total} 個房源"
+    },
+    "RecentlyViewed": {
+        "title": "最近查看",
+        "perMonth": "/月"
+    },
+    "Amenities": {
+        "Pool": "游泳池",
+        "Gym": "健身房",
+        "WiFi": "無線網絡",
+        "Parking": "停車場",
+        "Concierge": "禮賓服務",
+        "Rooftop": "屋頂露台",
+        "Spa": "水療中心",
+        "Garden": "花園",
+        "Beach Access": "海灘通道"
+    },
+    "Map": {
+        "loading": "正在加載地圖...",
+        "viewDetails": "查看詳情",
+        "perMonth": "/月"
     }
 }

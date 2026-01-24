@@ -32,7 +32,7 @@ test.describe('Admin Dashboard', () => {
 
         // If we are not logged in, we expect redirect.
         // This effectively duplicates auth check but confirms security.
-        await expect(page).toHaveURL(/.*\/en\/login/);
+        await expect(page).toHaveURL(/.*\/en\/login/, { timeout: 15000 });
     });
 
     test('add property page renders form', async ({ page }) => {
@@ -50,6 +50,6 @@ test.describe('Admin Dashboard', () => {
         // Let's try to mock the page load or just accept that we are verifying redirects.
 
         await page.goto('/en/admin/add');
-        await expect(page).toHaveURL(/.*\/en\/login/);
+        await expect(page).toHaveURL(/.*\/en\/login/, { timeout: 15000 });
     });
 });

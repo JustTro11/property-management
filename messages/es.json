@@ -12,7 +12,9 @@
     "PropertiesPage": {
         "title": "Nuestra Colección",
         "highlight": "Exclusiva",
-        "subtitle": "Explore nuestra selección cuidadosamente elegida de propiedades premium."
+        "subtitle": "Explore nuestra selección cuidadosamente elegida de propiedades premium.",
+        "listView": "Vista de Lista",
+        "mapView": "Vista de Mapa"
     },
     "AboutPage": {
         "title": "Sobre",
@@ -100,19 +102,40 @@
     },
     "PropertyFilters": {
         "searchPlaceholder": "Buscar por título o dirección...",
-        "priceRange": "Rango de Precio",
-        "minPrice": "Precio Min",
-        "maxPrice": "Precio Max",
-        "bedrooms": "Habitaciones",
-        "anyBeds": "Cualquier Hab",
-        "bedsPlus": "{count}+ Habs",
+        "priceRange": "Rango de precios",
+        "minPrice": "Precio mín",
+        "maxPrice": "Precio máx",
+        "bedrooms": "Dormitorios",
+        "anyBeds": "Cualquier cant.",
+        "bedsPlus": "{count}+ Dorm.",
         "status": "Estado",
-        "anyStatus": "Cualquier Estado",
-        "clear": "Limpiar Filtros"
+        "anyStatus": "Cualquier estado",
+        "clear": "Limpiar filtros",
+        "amenitiesLabel": "Amenidades"
     },
     "Pagination": {
         "previous": "Anterior",
         "next": "Siguiente",
         "showing": "Mostrando {start}-{end} de {total} propiedades"
+    },
+    "RecentlyViewed": {
+        "title": "Visto recientemente",
+        "perMonth": "/mes"
+    },
+    "Amenities": {
+        "Pool": "Piscina",
+        "Gym": "Gimnasio",
+        "WiFi": "WiFi",
+        "Parking": "Estacionamiento",
+        "Concierge": "Conserjería",
+        "Rooftop": "Azotea",
+        "Spa": "Spa",
+        "Garden": "Jardín",
+        "Beach Access": "Acceso a la playa"
+    },
+    "Map": {
+        "loading": "Cargando mapa...",
+        "viewDetails": "Ver detalles",
+        "perMonth": "/mes"
     }
 }

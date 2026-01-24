@@ -6,6 +6,8 @@ import { Property } from '@/types'
 import L from 'leaflet'
 import { useEffect } from 'react'
 
+import { useTranslations } from 'next-intl'
+
 // Fix for default marker icon in Leaflet with Next.js (and general webpack issues)
 const DefaultIcon = L.icon({
     iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -21,6 +23,7 @@ interface MapViewProps {
 }
 
 export default function MapView({ properties }: MapViewProps) {
+    const t = useTranslations('Map')
 
     // Default center (e.g. Los Angeles) if no properties, otherwise center on first property
     const defaultCenter: [number, number] = [34.0522, -118.2437];
@@ -37,8 +40,8 @@ export default function MapView({ properties }: MapViewProps) {
                     <Popup>
                         <div className="text-sm">
                             <h3 className="font-bold">{property.title}</h3>
-                            <p className="text-gray-600">${property.price.toLocaleString()}/mo</p>
-                            <a href={`/properties/${property.id}`} className="text-indigo-600 hover:underline">View Details</a>
+                            <p className="text-gray-600">${property.price.toLocaleString()}{t('perMonth')}</p>
+                            <a href={`/properties/${property.id}`} className="text-indigo-600 hover:underline">{t('viewDetails')}</a>
                         </div>
                     </Popup>
                 </Marker>

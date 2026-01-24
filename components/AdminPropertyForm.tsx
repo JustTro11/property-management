@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import { useRouter } from '@/lib/navigation'
 import { Loader2 } from 'lucide-react'
+import { AMENITIES } from '@/lib/constants'
 import { Property } from '@/types'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useDebounce } from 'use-debounce'
+// Removed useDebounce
+// import { useDebounce } from 'use-debounce'
 
 interface PropertyFormData extends Omit<Property, 'id' | 'created_at' | 'images'> {
     imagesStr: string
@@ -16,6 +18,8 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [geocoding, setGeocoding] = useState(false)
+    const [verifiedSignature, setVerifiedSignature] = useState(initialData ? `${initialData.address1 || ''}|${initialData.city || ''}|${initialData.state || ''}|${initialData.zip || ''}`.trim() : '')
+    const [verificationError, setVerificationError] = useState<string | null>(null)
 
     const {
         register,
@@ -61,6 +65,18 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
         }
     })
 
+    // Generate signature for current address state
+    const currentSignature = `${watch('address1') || ''}|${watch('city') || ''}|${watch('state') || ''}|${watch('zip') || ''}`.trim()
+
+    // Derived verification state
+    const isLocationVerified = currentSignature === verifiedSignature && currentSignature !== '|||'
+
+    // Effect to reset verification and error when address changes interaction
+    useEffect(() => {
+        setVerificationError(null)
+        // Reset lat/lng to 0 to force re-verification if signature mismatch (handled by derived state logic mostly, but good to be explicit about visual feedback)
+    }, [currentSignature])
+
     const imagesStr = watch('imagesStr')
     const imagesPreview = imagesStr
         ? imagesStr.split('\n').filter(url => url.trim() !== '')
@@ -77,15 +93,11 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
         setValue('amenities', updated)
     }
 
-    // Watch split address fields
+    // Watch split address fields to reset verification (already watched above for signature)
     const address1 = watch('address1')
     const city = watch('city')
     const state = watch('state')
     const zip = watch('zip')
-
-    // Combine for debounce
-    const combinedAddress = `${address1 || ''} ${city || ''} ${state || ''} ${zip || ''}`.trim()
-    const [debouncedAddress] = useDebounce(combinedAddress, 1000)
 
     useEffect(() => {
         register('amenities')
@@ -93,56 +105,73 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
         register('address')
     }, [register])
 
-    useEffect(() => {
-        const fetchCoordinates = async () => {
-            if (!debouncedAddress) return
+    const handleFormatAddress = async () => {
+        setVerificationError(null)
+        const currentAddress1 = getValues('address1')
+        const currentCity = getValues('city')
+        const currentState = getValues('state')
+        const currentZip = getValues('zip')
 
-            // Avoid re-fetching if coordinates are already set and matched (heuristic)
-            const currentLat = getValues('lat')
-            const currentLng = getValues('lng')
-            // Only skip if we have coords and the address matches initial (edit mode optimization)
-            if (initialData && currentLat !== 0 && currentLng !== 0) {
-                const initialCombined = `${initialData.address1 || ''} ${initialData.city || ''} ${initialData.state || ''} ${initialData.zip || ''}`.trim()
-                if (initialCombined === debouncedAddress) return;
-            }
+        const combinedAddress = `${currentAddress1 || ''} ${currentCity || ''} ${currentState || ''} ${currentZip || ''}`.trim()
 
-            setGeocoding(true)
-            try {
-                // Add addressdetails=1 to get components if needed, though mostly using lat/lon/display_name here
-                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(debouncedAddress)}&addressdetails=1&limit=1`)
-                const data = await response.json()
-
-                if (data && data.length > 0) {
-                    const result = data[0]
-                    setValue('lat', parseFloat(result.lat))
-                    setValue('lng', parseFloat(result.lon))
-
-                    // Optional: autofill missing fields from response? 
-                    // User explicitly asked for "split fields", implying they want control.
-                    // We will NOT overwrite what they typed, but we'll ensure lat/lng is synced.
-                    // If we wanted to standardise: we could update fields here.
-
-                    // For legacy support, construct the full address string
-                    setValue('address', result.display_name)
-                } else {
-                    setValue('lat', 0)
-                    setValue('lng', 0)
-                    setValue('address', '') // Clear address if not found
-                }
-            } catch (error) {
-                console.error('Geocoding error:', error)
-                setValue('lat', 0)
-                setValue('lng', 0)
-                setValue('address', '')
-            } finally {
-                setGeocoding(false)
-            }
+        if (!combinedAddress) {
+            setVerificationError('Please enter at least Address Line 1, City, State, and Zip to verify.')
+            return
         }
 
-        fetchCoordinates()
-    }, [debouncedAddress, setValue, getValues, initialData])
+        setGeocoding(true)
+        try {
+            // Add addressdetails=1 to get components if needed, though mostly using lat/lon/display_name here
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(combinedAddress)}&addressdetails=1&limit=1`)
+            const data = await response.json()
+
+            if (data && data.length > 0) {
+                const result = data[0]
+                const addr = result.address || {}
+
+                // Parse standard address components
+                const newAddress1 = [addr.house_number, addr.road].filter(Boolean).join(' ') || result.display_name.split(',')[0]
+                const newCity = addr.city || addr.town || addr.village || addr.municipality || ''
+                const newState = addr.state || ''
+                const newZip = addr.postcode || ''
+
+                // Update form fields with formatted data
+                if (newAddress1) setValue('address1', newAddress1)
+                if (newCity) setValue('city', newCity)
+                if (newState) setValue('state', newState)
+                if (newZip) setValue('zip', newZip)
+
+                setValue('lat', parseFloat(result.lat))
+                setValue('lng', parseFloat(result.lon))
+                setValue('address', result.display_name)
+
+                // Update verified signature to match the new values
+                setVerifiedSignature(`${newAddress1 || currentAddress1}|${newCity || currentCity}|${newState || currentState}|${newZip || currentZip}`.trim())
+            } else {
+                setValue('lat', 0)
+                setValue('lng', 0)
+                setValue('address', '') // Clear address if not found
+                setVerifiedSignature('') // Invalidate
+                setVerificationError('Address not found. Please check spelling or try a broader search.')
+            }
+        } catch (error) {
+            console.error('Geocoding error:', error)
+            setValue('lat', 0)
+            setValue('lng', 0)
+            setValue('address', '')
+            setVerifiedSignature('')
+            setVerificationError('Failed to verify address. Please try again.')
+        } finally {
+            setGeocoding(false)
+        }
+    }
 
     const onSubmit: SubmitHandler<PropertyFormData> = async (data) => {
+        if (!isLocationVerified) {
+            setVerificationError('Values changed. Please verify the location again before saving.')
+            return
+        }
+
         setLoading(true)
 
         try {
@@ -240,7 +269,25 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
 
                 {/* Split Address Fields */}
                 <div className="sm:col-span-6">
-                    <h3 className="text-sm font-medium text-zinc-900 dark:text-white mb-3">Location Details</h3>
+                    <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-sm font-medium text-zinc-900 dark:text-white">Location Details</h3>
+                        <button
+                            type="button"
+                            onClick={handleFormatAddress}
+                            disabled={geocoding}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm flex items-center gap-2 ${isLocationVerified
+                                ? 'bg-green-100 text-green-700 border border-green-200 cursor-default'
+                                : 'bg-white dark:bg-zinc-800 border border-indigo-600 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30'} disabled:opacity-50`}
+                        >
+                            {geocoding ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                            {geocoding ? 'Verifying...' : isLocationVerified ? 'Verified ✓' : 'Verify Address'}
+                        </button>
+                    </div>
+                    {verificationError && (
+                        <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md text-sm text-red-600 dark:text-red-400 flex items-center gap-2">
+                            <span>⚠️</span> {verificationError}
+                        </div>
+                    )}
                     <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
                         <div className="sm:col-span-6">
                             <label htmlFor="address1" className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">Address Line 1</label>
@@ -297,8 +344,6 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
                             />
                             {errors.zip && <span className="text-xs text-red-500">{errors.zip.message}</span>}
                         </div>
-
-                        {geocoding && <span className="text-xs text-indigo-500 sm:col-span-6 animate-pulse">Locating...</span>}
                     </div>
                 </div>
 
@@ -409,7 +454,7 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
                         Amenities
                     </label>
                     <div className="flex flex-wrap gap-2 mb-2">
-                        {['Pool', 'Gym', 'WiFi', 'Parking', 'Concierge', 'Rooftop', 'Spa', 'Garden', 'Beach Access'].map((amenity) => (
+                        {AMENITIES.map((amenity) => (
                             <button
                                 key={amenity}
                                 type="button"
@@ -440,13 +485,20 @@ export default function AdminPropertyForm({ initialData }: { initialData?: Prope
                 >
                     Cancel
                 </button>
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="inline-flex justify-center rounded-full border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-indigo-500/20 disabled:opacity-50"
-                >
-                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Save Property'}
-                </button>
+                <div className="relative group">
+                    <button
+                        type="submit"
+                        disabled={loading || !isLocationVerified}
+                        className="inline-flex justify-center rounded-full border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-indigo-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Save Property'}
+                    </button>
+                    {!isLocationVerified && !loading && (
+                        <div className="absolute bottom-full mb-2 right-0 w-48 p-2 bg-zinc-800 text-white text-xs rounded shadow-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity text-center z-10">
+                            Please verify the address location before saving.
+                        </div>
+                    )}
+                </div>
             </div>
         </form >
     )
